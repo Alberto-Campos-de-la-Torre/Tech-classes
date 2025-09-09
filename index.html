@@ -242,7 +242,7 @@
 
     <div class="quiz-container">
         <div id="termination-overlay">
-            <img src="https://i.gifer.com/origin/f1/f1a737e8976378544975511e93b13680_w200.gif" alt="Emoji desintegrándose" class="termination-gif">
+            <img src="https://c.tenor.com/HNBWa_wyADYAAAAC/emoji-emoji-disintegrating.gif" alt="Emoji desintegrándose" class="termination-gif">
             <h2>Quiz Finalizado</h2>
             <p id="termination-message">La evaluación ha terminado automáticamente.</p>
             <div id="retry-section">
@@ -328,9 +328,8 @@
             let userAnswers = [];
             let quizFinished = false;
             
-            // Using sessionStorage is more appropriate for this as it's cleared when the tab is closed.
-            // It works reliably on local files unlike cookies.
-            const storageKey = 'quizInProgress';
+            // sessionStorage is more reliable for local files as it's cleared when the browser/tab is closed.
+            const storageKey = 'quizInProgress_12345';
 
             function terminateQuiz(reason) {
                 if (quizFinished) return;
