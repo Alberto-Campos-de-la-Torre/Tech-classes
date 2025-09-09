@@ -1,3 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Sumativo: Fundamentos de Campaña Digital</title>
+    <style>
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #f4f4f9;
+            --text-color: #333;
+            --accent-color: #FFC107;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --correct-bg: #d4edda;
+            --incorrect-bg: #f8d7da;
+            --correct-text: #155724;
+            --incorrect-text: #721c24;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin: 5px 0 0 0; font-size: 1rem; opacity: 0.9; }
+
+        #quiz-form, #results-container {
+            padding: 2rem;
+        }
+        
+        .warning-banner {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid #ffeeba;
+        }
+
+        .question-block {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .question-block:last-of-type {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .answer-options label {
+            display: block;
+            background-color: var(--secondary-color);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color: 0.3s;
+        }
+        .answer-options label:hover {
+            background-color: #e2e6ea;
+        }
+        .answer-options input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .quiz-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color: 0.3s;
+        }
+        .quiz-button:hover {
+            background-color: #e0a800;
+        }
+
+        #results-container { display: none; }
+        
+        #results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+        #results-table th, #results-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        #results-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #results-table tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+
+        .correct-answer {
+            background-color: var(--correct-bg);
+            color: var(--correct-text);
+        }
+        .incorrect-answer {
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-text);
+        }
+
+        #reveal-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        #password-input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #reveal-button {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        #password-error {
+            color: var(--incorrect-text);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* ----- CORRECCIÓN CLAVE #1: CSS del Overlay ----- */
+        #termination-overlay {
+            position: fixed; /* Posición relativa a la ventana, no al contenedor */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.98);
+            color: var(--text-color);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 100;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .termination-gif {
+            width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        #termination-overlay h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        #termination-overlay p {
+            font-size: 1.2rem;
+            max-width: 80%;
+        }
+        #retry-section {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        #retry-section p {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        #retry-password-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        #retry-button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #retry-error {
+            color: var(--incorrect-text);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+    </style>
+</head>
 <body>
 
     <div id="termination-overlay">
@@ -14,11 +255,200 @@
 
     <div class="quiz-container">
         <div id="main-content">
+            <header>
+                <h1>Quiz Sumativo</h1>
+                <p>Fundamentos de Campaña Digital</p>
+            </header>
+
+            <div id="quiz-content">
+                <div class="warning-banner">
+                    ⚠️ Atención: Si cambias de pestaña o recargas la página, el quiz se finalizará automáticamente.
+                </div>
+
+                <form id="quiz-form">
+                    <button type="submit" class="quiz-button">Finalizar Quiz</button>
+                </form>
             </div>
+
+            <div id="results-container">
+                <h2>Tus Respuestas</h2>
+                <p>Aquí está el resumen de las respuestas que seleccionaste. Para ver las respuestas correctas, introduce la contraseña.</p>
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tu Respuesta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                    </tbody>
+                </table>
+                <div id="reveal-section">
+                    <input type="password" id="password-input" placeholder="Introduce la contraseña">
+                    <button id="reveal-button">Revelar Respuestas</button>
+                </div>
+                 <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ... tu javascript se queda igual ...
+        // El código JavaScript no necesita cambios, ya que la lógica era correcta.
+        document.addEventListener('DOMContentLoaded', () => {
+            const quizData = [
+                { question: "¿Qué abarca el concepto de 'huella digital' de la manera más completa?", options: ["Únicamente las publicaciones y fotos que subes a redes sociales.", "El historial de sitios web que visitas, guardado en tu navegador.", "La combinación de toda tu actividad en línea, tanto la que compartes voluntariamente como los datos que se recopilan sobre tu navegación.", "La reputación que tienes entre tus amigos y seguidores en línea."], answer: 2 },
+                { question: "Una campaña de reforestación establece: \"Nuestra Misión es plantar 10,000 árboles este año con voluntarios locales\". ¿Cuál de las siguientes sería la Visión más apropiada?", options: ["Nuestra Visión es recaudar fondos para comprar herramientas y árboles.", "Nuestra Visión es un futuro donde nuestra ciudad tenga pulmones verdes y un ecosistema restaurado para las próximas generaciones.", "Nuestra Visión es crear un logo memorable y una paleta de colores verdes.", "Nuestra Visión es documentar el proceso de plantación en redes sociales."], answer: 1 },
+                { question: "¿Cuál es el propósito principal de crear un 'moodboard'?", options: ["Definir la paleta de colores final y las tipografías exactas que usará el proyecto.", "Crear un collage de inspiración que establece la 'sensación' y la dirección visual de una marca.", "Diseñar el borrador final de la página de inicio del sitio web.", "Presentar los valores de la marca a los posibles inversores de la campaña."], answer: 1 },
+                { question: "¿Cuál de los siguientes principios de la Ciudadanía Digital se relaciona con la idea de que la información en línea puede ser muy difícil de eliminar por completo?", options: ["Bienestar digital, que se enfoca en el uso saludable de la tecnología.", "Alfabetización mediática, que se enfoca en analizar críticamente la información.", "La permanencia de la huella digital, que implica la persistencia de los datos en el tiempo.", "Los derechos de autor, que protegen la propiedad intelectual de los creadores."], answer: 2 },
+                { question: "Un elemento clave para el éxito de campañas virales como #TeamSeas fue:", options: ["Un mensaje claro ('1 dólar = 1 libra de basura') y una llamada a la acción simple (donar).", "El uso de una plataforma tecnológica exclusiva y muy costosa para recibir donaciones.", "La colaboración únicamente con científicos y expertos en oceanografía.", "La publicación de contenido solo una vez al mes para generar expectación."], answer: 0 },
+                { question: "Si los Valores de una campaña son \"Comunidad, Educación y Transparencia\", ¿qué acción NO estaría alineada con su marca?", options: ["Publicar informes detallados sobre cómo se usan las donaciones.", "Organizar talleres abiertos al público para enseñar sobre su causa.", "Tomar decisiones importantes sobre la campaña sin consultar a sus voluntarios clave.", "Crear foros en línea para que los seguidores discutan y compartan ideas."], answer: 2 },
+                { question: "¿Cuál es la relación correcta entre 'Branding' e 'Identidad Visual'?", options: ["Son exactamente lo mismo; 'Branding' es solo un término más moderno.", "El Branding es la estrategia y el sentimiento de la marca (el 'porqué'), mientras que la Identidad Visual son los elementos gráficos como el logo y los colores que la representan.", "La Identidad Visual es la estrategia general, y el Branding es solo el diseño del logo.", "El Branding se enfoca en la estrategia de marketing, mientras que la Identidad Visual se enfoca únicamente en el diseño web."], answer: 1 },
+                { question: "Tu historial de búsqueda en Google es un ejemplo de tu huella digital...", options: ["Pasiva, porque se recopila como parte de tu navegación sin una acción explícita de 'publicar'.", "Activa, porque tú escribiste activamente las palabras para buscar.", "Neutra, porque nadie más puede ver tu historial de búsqueda.", "Volátil, porque se borra automáticamente cada 24 horas."], answer: 0 },
+                { question: "El objetivo principal del branding para una causa social es...", options: ["Asegurar que la campaña tenga más seguidores que otras causas similares.", "Generar confianza, comunicar un mensaje claro y motivar a la acción y al apoyo.", "Diseñar un logo atractivo que pueda venderse en mercancía para financiar la causa.", "Desarrollar una estrategia publicitaria compleja para competir en el mercado."], answer: 1 },
+                { question: "Los tres componentes del 'ADN de la Marca' que definimos son:", options: ["Logo, Página Web y Video.", "Colores, Tipografía e Imágenes.", "Misión, Visión y Valores.", "Investigación, Diseño y Publicación."], answer: 2 },
+                { question: "Al crear contenido para tu campaña, ¿qué práctica de Ciudadanía Digital es fundamental para respetar el trabajo de otros?", options: ["Usar siempre los colores más populares de la temporada.", "Asegurarse de que el contenido se vea bien en celulares y computadoras.", "Publicar el contenido en el mayor número de plataformas posible.", "Usar imágenes de dominio público o con licencias Creative Commons, y dar crédito si es necesario."], answer: 3 },
+                { question: "Una campaña para promover la salud mental en adolescentes usa colores pastel, tipografías amigables y redondeadas, e imágenes de gente apoyándose. ¿Qué 'personalidad de marca' están intentando comunicar?", options: ["Urgencia, acción y protesta.", "Lujo, exclusividad y elegancia.", "Seguridad, empatía y cercanía.", "Tecnología, innovación y futurismo."], answer: 2 },
+                { question: "El 'Asistente de Marca con IA' que usamos en clase es una herramienta para...", options: ["Reemplazar la creatividad del equipo en la definición de la marca.", "Generar un punto de partida e inspiración para la estrategia de marca.", "Escribir automáticamente todos los textos de la campaña.", "Diseñar un moodboard de manera automática basado en una palabra."], answer: 1 },
+                { question: "Un 'Ciudadano Digital' responsable entiende que su identidad en línea...", options: ["Es completamente anónima y no tiene consecuencias en el mundo real.", "Es una construcción que afecta su reputación y oportunidades.", "Solo es importante para las personas que quieren ser 'influencers'.", "Es independiente de su comportamiento y de lo que comparte."], answer: 1 },
+                { question: "¿Qué elemento NO forma parte de la 'Identidad Visual' de una marca?", options: ["La paleta de colores.", "El diseño del logo.", "La declaración de la Misión.", "Las tipografías seleccionadas."], answer: 2 }
+            ];
+
+            const mainContent = document.getElementById('main-content');
+            const quizForm = document.getElementById('quiz-form');
+            const resultsContainer = document.getElementById('results-container');
+            const resultsBody = document.getElementById('results-body');
+            const revealButton = document.getElementById('reveal-button');
+            const passwordInput = document.getElementById('password-input');
+            const passwordError = document.getElementById('password-error');
+            const terminationOverlay = document.getElementById('termination-overlay');
+            const terminationMessage = document.getElementById('termination-message');
+            const retryButton = document.getElementById('retry-button');
+            const retryPasswordInput = document.getElementById('retry-password-input');
+            const retryError = document.getElementById('retry-error');
+
+            let userAnswers = [];
+            let quizFinished = false;
+            
+            const storageKey = 'quizInProgress_12345';
+
+            function terminateQuiz(reason) {
+                if (quizFinished) return;
+                quizFinished = true;
+
+                let message = "La evaluación ha terminado automáticamente.";
+                if (reason === 'reload') {
+                    message = "La evaluación ha terminado porque se ha recargado la página.";
+                } else if (reason === 'tabChange') {
+                    message = "La evaluación ha terminado automáticamente por haber cambiado de pestaña o ventana.";
+                }
+                
+                terminationMessage.textContent = message;
+                mainContent.style.display = 'none';
+                terminationOverlay.style.display = 'flex';
+                sessionStorage.removeItem(storageKey);
+            }
+
+            if (sessionStorage.getItem(storageKey) === 'true') {
+                terminateQuiz('reload');
+                return; 
+            }
+            
+            sessionStorage.setItem(storageKey, 'true');
+            loadQuiz();
+            
+            function loadQuiz() {
+                if (quizFinished) return;
+                const quizHtml = quizData.map((q, index) => {
+                    const optionsHtml = q.options.map((option, i) => `
+                        <label>
+                            <input type="radio" name="question${index}" value="${i}" required>
+                            ${option}
+                        </label>
+                    `).join('');
+                    return `<div class="question-block"><p class="question-text">${index + 1}. ${q.question}</p><div class="answer-options">${optionsHtml}</div></div>`;
+                }).join('');
+                
+                const submitButton = quizForm.querySelector('.quiz-button');
+                submitButton.insertAdjacentHTML('beforebegin', quizHtml);
+            }
+
+            function submitAndShowResults() {
+                if(quizFinished) return;
+                quizFinished = true;
+                sessionStorage.removeItem(storageKey);
+                
+                userAnswers = quizData.map((_, index) => {
+                    const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                    return selectedOption ? parseInt(selectedOption.value) : -1;
+                });
+                displayResults();
+            }
+
+            quizForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitAndShowResults();
+            });
+
+            function displayResults() {
+                let tableHtml = '';
+                userAnswers.forEach((answerIndex, questionIndex) => {
+                    const question = quizData[questionIndex];
+                    const userAnswerText = (answerIndex === -1) ? "No respondida" : question.options[answerIndex];
+                    tableHtml += `<tr data-question-index="${questionIndex}"><td>${questionIndex + 1}</td><td class="user-answer-cell">${userAnswerText}</td></tr>`;
+                });
+                resultsBody.innerHTML = tableHtml;
+                document.getElementById('quiz-content').style.display = 'none';
+                resultsContainer.style.display = 'block';
+            }
+
+            revealButton.addEventListener('click', function() {
+                if (passwordInput.value.toLowerCase() === 'brainrot') {
+                    passwordError.style.display = 'none';
+                    if (!document.querySelector('#results-table thead th:last-child').textContent.includes('Correcta')) {
+                        const tableHeader = document.querySelector('#results-table thead tr');
+                        const th = document.createElement('th');
+                        th.textContent = 'Respuesta Correcta';
+                        tableHeader.appendChild(th);
+                    }
+                    const rows = resultsBody.querySelectorAll('tr');
+                    rows.forEach(row => {
+                        if(row.cells.length > 2) return;
+                        const questionIndex = parseInt(row.dataset.questionIndex);
+                        const question = quizData[questionIndex];
+                        const userAnswerIndex = userAnswers[questionIndex];
+                        const correctAnswerIndex = question.answer;
+                        const correctAnswerCell = document.createElement('td');
+                        correctAnswerCell.textContent = question.options[correctAnswerIndex];
+                        row.appendChild(correctAnswerCell);
+                        const userAnswerCell = row.querySelector('.user-answer-cell');
+                        if (userAnswerIndex === correctAnswerIndex) {
+                            userAnswerCell.classList.add('correct-answer');
+                        } else {
+                            userAnswerCell.classList.add('incorrect-answer');
+                        }
+                    });
+                    document.getElementById('reveal-section').style.display = 'none';
+                } else {
+                    passwordError.style.display = 'block';
+                }
+            });
+            
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && !quizFinished) {
+                    terminateQuiz('tabChange');
+                }
+            });
+            
+            retryButton.addEventListener('click', () => {
+                if (retryPasswordInput.value === 'perdonalberprofe') {
+                    sessionStorage.removeItem(storageKey);
+                    location.reload();
+                } else {
+                    retryError.style.display = 'block';
+                }
+            });
+        });
     </script>
 
 </body>
+</html>
