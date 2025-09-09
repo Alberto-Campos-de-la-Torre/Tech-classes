@@ -181,7 +181,7 @@
             height: 100%;
             background-color: rgba(255, 255, 255, 0.98);
             color: var(--text-color);
-            display: none;
+            display: none; /* Hidden by default */
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -255,41 +255,43 @@
             </div>
         </div>
         
-        <header>
-            <h1>Quiz Sumativo</h1>
-            <p>Fundamentos de Campaña Digital</p>
-        </header>
+        <div id="main-content">
+            <header>
+                <h1>Quiz Sumativo</h1>
+                <p>Fundamentos de Campaña Digital</p>
+            </header>
 
-        <div id="quiz-content">
-            <div class="warning-banner">
-                ⚠️ Atención: Si cambias de pestaña o recargas la página, el quiz se finalizará automáticamente.
+            <div id="quiz-content">
+                <div class="warning-banner">
+                    ⚠️ Atención: Si cambias de pestaña o recargas la página, el quiz se finalizará automáticamente.
+                </div>
+
+                <form id="quiz-form">
+                    <!-- Questions will be injected here by JavaScript -->
+                    <button type="submit" class="quiz-button">Finalizar Quiz</button>
+                </form>
             </div>
 
-            <form id="quiz-form">
-                <!-- Questions will be injected here by JavaScript -->
-                <button type="submit" class="quiz-button">Finalizar Quiz</button>
-            </form>
-        </div>
-
-        <div id="results-container">
-            <h2>Tus Respuestas</h2>
-            <p>Aquí está el resumen de las respuestas que seleccionaste. Para ver las respuestas correctas, introduce la contraseña.</p>
-            <table id="results-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tu Respuesta</th>
-                    </tr>
-                </thead>
-                <tbody id="results-body">
-                    <!-- Results will be injected here -->
-                </tbody>
-            </table>
-            <div id="reveal-section">
-                <input type="password" id="password-input" placeholder="Introduce la contraseña">
-                <button id="reveal-button">Revelar Respuestas</button>
+            <div id="results-container">
+                <h2>Tus Respuestas</h2>
+                <p>Aquí está el resumen de las respuestas que seleccionaste. Para ver las respuestas correctas, introduce la contraseña.</p>
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tu Respuesta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                        <!-- Results will be injected here -->
+                    </tbody>
+                </table>
+                <div id="reveal-section">
+                    <input type="password" id="password-input" placeholder="Introduce la contraseña">
+                    <button id="reveal-button">Revelar Respuestas</button>
+                </div>
+                 <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
             </div>
-             <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
         </div>
     </div>
 
@@ -489,7 +491,7 @@
                 }
             ];
 
-            const quizContent = document.getElementById('quiz-content');
+            const mainContent = document.getElementById('main-content');
             const quizForm = document.getElementById('quiz-form');
             const resultsContainer = document.getElementById('results-container');
             const resultsBody = document.getElementById('results-body');
@@ -517,8 +519,7 @@
                 }
                 
                 terminationMessage.textContent = message;
-                quizContent.style.display = 'none';
-                resultsContainer.style.display = 'none';
+                mainContent.style.display = 'none';
                 terminationOverlay.style.display = 'flex';
                 eraseCookie('quizInProgress');
             }
@@ -526,10 +527,11 @@
             // --- RELOAD & COOKIE CHECK ---
             if (getCookie('quizInProgress') === 'true') {
                 terminateQuiz('reload');
-            } else {
-                setCookie('quizInProgress', 'true', 30); // Set a 30-minute cookie for the session
-                loadQuiz();
+                return; 
             }
+            
+            setCookie('quizInProgress', 'true', 30); // Set a 30-minute cookie for the session
+            loadQuiz();
             
             // Load questions into the form
             function loadQuiz() {
@@ -589,7 +591,7 @@
                 });
 
                 resultsBody.innerHTML = tableHtml;
-                quizContent.style.display = 'none';
+                document.getElementById('quiz-content').style.display = 'none';
                 resultsContainer.style.display = 'block';
             }
 
