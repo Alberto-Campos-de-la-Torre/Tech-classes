@@ -179,7 +179,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.98);
             color: var(--text-color);
             display: none;
             flex-direction: column;
@@ -244,7 +244,7 @@
 
     <div class="quiz-container">
         <div id="termination-overlay">
-            <img src="https://c.tenor.com/HNBWa_wyADYAAAAC/emoji-emoji-disintegrating.gif" alt="Emoji desintegrándose" class="termination-gif">
+            <img src="https://i.gifer.com/origin/f1/f1a737e8976378544975511e93b13680_w200.gif" alt="Emoji desintegrándose" class="termination-gif">
             <h2>Quiz Finalizado</h2>
             <p id="termination-message">La evaluación ha terminado automáticamente.</p>
             <div id="retry-section">
@@ -260,14 +260,16 @@
             <p>Fundamentos de Campaña Digital</p>
         </header>
 
-        <div class="warning-banner">
-            ⚠️ Atención: Si cambias de pestaña o recargas la página, el quiz se finalizará automáticamente.
-        </div>
+        <div id="quiz-content">
+            <div class="warning-banner">
+                ⚠️ Atención: Si cambias de pestaña o recargas la página, el quiz se finalizará automáticamente.
+            </div>
 
-        <form id="quiz-form">
-            <!-- Questions will be injected here by JavaScript -->
-            <button type="submit" class="quiz-button">Finalizar Quiz</button>
-        </form>
+            <form id="quiz-form">
+                <!-- Questions will be injected here by JavaScript -->
+                <button type="submit" class="quiz-button">Finalizar Quiz</button>
+            </form>
+        </div>
 
         <div id="results-container">
             <h2>Tus Respuestas</h2>
@@ -320,7 +322,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const quizData = [
-                // Question 1
+                 // Question 1
                 {
                     question: "¿Qué abarca el concepto de 'huella digital' de la manera más completa?",
                     options: [
@@ -487,6 +489,7 @@
                 }
             ];
 
+            const quizContent = document.getElementById('quiz-content');
             const quizForm = document.getElementById('quiz-form');
             const resultsContainer = document.getElementById('results-container');
             const resultsBody = document.getElementById('results-body');
@@ -494,7 +497,7 @@
             const passwordInput = document.getElementById('password-input');
             const passwordError = document.getElementById('password-error');
             const terminationOverlay = document.getElementById('termination-overlay');
-            const terminationMessage = terminationOverlay.querySelector('#termination-message');
+            const terminationMessage = document.getElementById('termination-message');
             const retryButton = document.getElementById('retry-button');
             const retryPasswordInput = document.getElementById('retry-password-input');
             const retryError = document.getElementById('retry-error');
@@ -502,21 +505,35 @@
             let userAnswers = [];
             let quizFinished = false;
 
+            function terminateQuiz(reason) {
+                if (quizFinished) return;
+                quizFinished = true;
+
+                let message = "La evaluación ha terminado automáticamente.";
+                if (reason === 'reload') {
+                    message = "La evaluación ha terminado porque se ha recargado la página.";
+                } else if (reason === 'tabChange') {
+                    message = "La evaluación ha terminado automáticamente por haber cambiado de pestaña o ventana.";
+                }
+                
+                terminationMessage.textContent = message;
+                quizContent.style.display = 'none';
+                resultsContainer.style.display = 'none';
+                terminationOverlay.style.display = 'flex';
+                eraseCookie('quizInProgress');
+            }
+
             // --- RELOAD & COOKIE CHECK ---
             if (getCookie('quizInProgress') === 'true') {
-                quizFinished = true;
-                terminationMessage.textContent = "La evaluación ha terminado porque se ha recargado la página.";
-                terminationOverlay.style.display = 'flex';
-                quizForm.style.display = 'none';
-                document.querySelector('.warning-banner').style.display = 'none';
-                resultsContainer.style.display = 'none';
+                terminateQuiz('reload');
             } else {
                 setCookie('quizInProgress', 'true', 30); // Set a 30-minute cookie for the session
                 loadQuiz();
             }
-
+            
             // Load questions into the form
             function loadQuiz() {
+                if (quizFinished) return;
                 const quizHtml = quizData.map((q, index) => {
                     const optionsHtml = q.options.map((option, i) => `
                         <label>
@@ -542,6 +559,7 @@
             function submitAndShowResults() {
                 if(quizFinished) return;
                 quizFinished = true;
+                eraseCookie('quizInProgress');
                 
                 userAnswers = quizData.map((_, index) => {
                     const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
@@ -571,8 +589,7 @@
                 });
 
                 resultsBody.innerHTML = tableHtml;
-                quizForm.style.display = 'none';
-                document.querySelector('.warning-banner').style.display = 'none';
+                quizContent.style.display = 'none';
                 resultsContainer.style.display = 'block';
             }
 
@@ -617,10 +634,7 @@
             
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden && !quizFinished) {
-                    submitAndShowResults();
-                    resultsContainer.style.display = 'none';
-                    terminationMessage.textContent = "La evaluación ha terminado automáticamente por haber cambiado de pestaña o ventana.";
-                    terminationOverlay.style.display = 'flex';
+                    terminateQuiz('tabChange');
                 }
             });
 
