@@ -171,9 +171,8 @@
             display: none;
         }
 
-        /* ----- CORRECCIÓN CLAVE #1: CSS del Overlay ----- */
         #termination-overlay {
-            position: fixed; /* Posición relativa a la ventana, no al contenedor */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -293,9 +292,9 @@
     </div>
 
     <script>
-        // El código JavaScript no necesita cambios, ya que la lógica era correcta.
         document.addEventListener('DOMContentLoaded', () => {
             const quizData = [
+                // ... (Tu array de preguntas va aquí, no lo he incluido por brevedad, pero debe estar aquí) ...
                 { question: "¿Qué abarca el concepto de 'huella digital' de la manera más completa?", options: ["Únicamente las publicaciones y fotos que subes a redes sociales.", "El historial de sitios web que visitas, guardado en tu navegador.", "La combinación de toda tu actividad en línea, tanto la que compartes voluntariamente como los datos que se recopilan sobre tu navegación.", "La reputación que tienes entre tus amigos y seguidores en línea."], answer: 2 },
                 { question: "Una campaña de reforestación establece: \"Nuestra Misión es plantar 10,000 árboles este año con voluntarios locales\". ¿Cuál de las siguientes sería la Visión más apropiada?", options: ["Nuestra Visión es recaudar fondos para comprar herramientas y árboles.", "Nuestra Visión es un futuro donde nuestra ciudad tenga pulmones verdes y un ecosistema restaurado para las próximas generaciones.", "Nuestra Visión es crear un logo memorable y una paleta de colores verdes.", "Nuestra Visión es documentar el proceso de plantación en redes sociales."], answer: 1 },
                 { question: "¿Cuál es el propósito principal de crear un 'moodboard'?", options: ["Definir la paleta de colores final y las tipografías exactas que usará el proyecto.", "Crear un collage de inspiración que establece la 'sensación' y la dirección visual de una marca.", "Diseñar el borrador final de la página de inicio del sitio web.", "Presentar los valores de la marca a los posibles inversores de la campaña."], answer: 1 },
@@ -329,7 +328,8 @@
             let userAnswers = [];
             let quizFinished = false;
             
-            const storageKey = 'quizInProgress_12345';
+            // Se usa localStorage para persistencia y un nuevo nombre de clave.
+            const storageKey = 'quizState_12345';
 
             function terminateQuiz(reason) {
                 if (quizFinished) return;
@@ -340,24 +340,38 @@
                     message = "La evaluación ha terminado porque se ha recargado la página.";
                 } else if (reason === 'tabChange') {
                     message = "La evaluación ha terminado automáticamente por haber cambiado de pestaña o ventana.";
+                } else if (reason === 'blocked') {
+                    message = "Esta evaluación ya ha sido finalizada y está bloqueada.";
                 }
                 
                 terminationMessage.textContent = message;
                 mainContent.style.display = 'none';
                 terminationOverlay.style.display = 'flex';
-                sessionStorage.removeItem(storageKey);
+
+                // --- CAMBIO CLAVE ---
+                // Ahora se establece el estado a 'terminated' en lugar de borrar la clave.
+                localStorage.setItem(storageKey, 'terminated');
             }
 
-            if (sessionStorage.getItem(storageKey) === 'true') {
-                terminateQuiz('reload');
-                return; 
+            function initializeQuiz() {
+                const quizState = localStorage.getItem(storageKey);
+
+                if (quizState === 'terminated') {
+                    // Si ya estaba bloqueado, lo bloqueamos de nuevo al cargar.
+                    terminateQuiz('blocked');
+                    return;
+                } else if (quizState === 'in_progress') {
+                    // Si estaba en progreso (el usuario recargó), lo bloqueamos.
+                    terminateQuiz('reload');
+                    return;
+                }
+
+                // Si no hay estado (primera visita), iniciamos el quiz.
+                localStorage.setItem(storageKey, 'in_progress');
+                loadQuiz();
             }
             
-            sessionStorage.setItem(storageKey, 'true');
-            loadQuiz();
-            
             function loadQuiz() {
-                if (quizFinished) return;
                 const quizHtml = quizData.map((q, index) => {
                     const optionsHtml = q.options.map((option, i) => `
                         <label>
@@ -365,7 +379,10 @@
                             ${option}
                         </label>
                     `).join('');
-                    return `<div class="question-block"><p class="question-text">${index + 1}. ${q.question}</p><div class="answer-options">${optionsHtml}</div></div>`;
+                    const questionBlock = document.createElement('div');
+                    questionBlock.className = 'question-block';
+                    questionBlock.innerHTML = `<p class="question-text">${index + 1}. ${q.question}</p><div class="answer-options">${optionsHtml}</div>`;
+                    return questionBlock.outerHTML;
                 }).join('');
                 
                 const submitButton = quizForm.querySelector('.quiz-button');
@@ -375,7 +392,9 @@
             function submitAndShowResults() {
                 if(quizFinished) return;
                 quizFinished = true;
-                sessionStorage.removeItem(storageKey);
+                
+                // Limpiamos la clave porque el quiz se terminó correctamente.
+                localStorage.removeItem(storageKey);
                 
                 userAnswers = quizData.map((_, index) => {
                     const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
@@ -390,6 +409,7 @@
             });
 
             function displayResults() {
+                // ... (El resto de funciones auxiliares no necesitan cambios)
                 let tableHtml = '';
                 userAnswers.forEach((answerIndex, questionIndex) => {
                     const question = quizData[questionIndex];
@@ -417,38 +437,4 @@
                         const question = quizData[questionIndex];
                         const userAnswerIndex = userAnswers[questionIndex];
                         const correctAnswerIndex = question.answer;
-                        const correctAnswerCell = document.createElement('td');
-                        correctAnswerCell.textContent = question.options[correctAnswerIndex];
-                        row.appendChild(correctAnswerCell);
-                        const userAnswerCell = row.querySelector('.user-answer-cell');
-                        if (userAnswerIndex === correctAnswerIndex) {
-                            userAnswerCell.classList.add('correct-answer');
-                        } else {
-                            userAnswerCell.classList.add('incorrect-answer');
-                        }
-                    });
-                    document.getElementById('reveal-section').style.display = 'none';
-                } else {
-                    passwordError.style.display = 'block';
-                }
-            });
-            
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden && !quizFinished) {
-                    terminateQuiz('tabChange');
-                }
-            });
-            
-            retryButton.addEventListener('click', () => {
-                if (retryPasswordInput.value === 'perdonalberprofe') {
-                    sessionStorage.removeItem(storageKey);
-                    location.reload();
-                } else {
-                    retryError.style.display = 'block';
-                }
-            });
-        });
-    </script>
-
-</body>
-</html>
+                        const
