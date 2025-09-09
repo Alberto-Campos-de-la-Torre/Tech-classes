@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 1: Digital Hero or Villain?</title>
+    <style>
+        /* --- COLOR VARIABLES & GLOBAL STYLES --- */
+        :root {
+            --primary-color: #005A9C; /* Institutional Blue */
+            --secondary-color: #f4f4f9; /* Light Background */
+            --text-color: #333; /* Dark Main Text */
+            --accent-color: #FFC107; /* Yellow for accents and buttons */
+            --card-bg: #ffffff; /* Card Background */
+            --shadow: 0 4px 8px rgba(0,0,0,0.1); /* Soft Shadow */
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { font-size: 1.2rem; }
+
+        /* --- CONTENT SECTIONS --- */
+        .section {
+            background: var(--card-bg);
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        .section h3 { color: var(--primary-color); }
+        .section h4 { color: var(--primary-color); margin-top: 20px; }
+
+
+        .time-estimate {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* --- PROFILE ACTIVITY STYLES --- */
+        .profile-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .profile-card {
+            background-color: var(--secondary-color);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .profile-card.positive { border-left: 5px solid var(--success-color); }
+        .profile-card.negative { border-left: 5px solid var(--danger-color); }
+        .profile-card.neutral { border-left: 5px solid var(--info-color); }
+        .profile-card.creative { border-left: 5px solid #9b59b6; } /* Purple */
+        .profile-card.wellness { border-left: 5px solid #2ecc71; } /* Emerald Green */
+        .profile-card.humor { border-left: 5px solid #e67e22; } /* Orange */
+
+        .profile-card img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff; box-shadow: var(--shadow); margin: 0 auto; }
+        .profile-card p { font-style: italic; color: #666; flex-grow: 1; }
+        
+        /* --- COMMENT SECTION --- */
+        .comment-section { margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px; }
+        .comment-section textarea { width: 95%; height: 80px; border-radius: 5px; border: 1px solid #ccc; padding: 5px; font-family: inherit; resize: vertical; }
+        .comment-section p { font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+        /* --- VIDEOS & BUTTONS STYLES --- */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .resource-video { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 8px; }
+        .resource-video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .btn-padlet { display: inline-block; background-color: #e84393; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; transition: background-color 0.3s ease, transform 0.3s ease; text-align: center; margin-top: 15px; }
+        .btn-padlet:hover { background-color: #d81b60; transform: scale(1.05); }
+        
+        /* --- OTHER STYLES --- */
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        footer { text-align: center; padding: 20px; margin-top: 30px; background: var(--primary-color); color: #fff; }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) { .container { width: 95%; } .time-estimate { display: none; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Lesson 1: My Digital Footprint</h1>
+            <p>What story does your online presence tell? Are you a digital hero or villain?</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="section" id="warm-up">
+            <span class="time-estimate">Estimated Time: 15 min</span>
+            <h2>Warm-Up Activity</h2>
+            <p>Analyze the following profiles. In the comment section of each, <strong>write down why you would or would not follow them</strong>. When you're done, <strong>take 1 or 2 screenshots</strong> of your comments as evidence of your analysis.</p>
+            <div class="profile-container">
+                <!-- Profile 1 -->
+                <div class="profile-card positive">
+                    <img src="https://placehold.co/80x80/28a745/FFFFFF?text=A" alt="Avatar Anna">
+                    <h3>Anna the Volunteer</h3>
+                    <p>"Sharing my journey helping at the local animal shelter. Every small action counts! 🐾 #AdoptDontShop"</p>
+                    <div class="comment-section">
+                        <textarea placeholder="Write your analysis here..."></textarea>
+                        <p>Remember to screenshot your comment.</p>
+                    </div>
+                </div>
+                <!-- Profile 2 -->
+                <div class="profile-card negative">
+                    <img src="https://placehold.co/80x80/dc3545/FFFFFF?text=C" alt="Avatar Carlos">
+                    <h3>Critical Carlos</h3>
+                    <p>"Here to tell it like it is. If you can't handle it, that's not my problem."</p>
+                    <div class="comment-section">
+                        <textarea placeholder="Write your analysis here..."></textarea>
+                        <p>Remember to screenshot your comment.</p>
+                    </div>
+                </div>
+                <!-- Profile 3 -->
+                <div class="profile-card neutral">
+                    <img src="https://placehold.co/80x80/17a2b8/FFFFFF?text=L" alt="Avatar Luis">
+                    <h3>Gamer Luis</h3>
+                    <p>"Streamer at heart. Late nights of gaming and good vibes. Follow me for epic gameplays and legendary fails. #GamerLife"</p>
+                    <div class="comment-section">
+                        <textarea placeholder="Write your analysis here..."></textarea>
+                        <p>Remember to screenshot your comment.</p>
+                    </div>
+                </div>
+                <!-- Profile 4 -->
+                <div class="profile-card creative">
+                    <img src="https://placehold.co/80x80/9b59b6/FFFFFF?text=S" alt="Avatar Sofia">
+                    <h3>Artist Sofia</h3>
+                    <p>"Creating worlds with a pencil and a brush. Here I share my process, my work, and a bit of my inspiration. 🎨 #DigitalArt"</p>
+                    <div class="comment-section">
+                        <textarea placeholder="Write your analysis here..."></textarea>
+                        <p>Remember to screenshot your comment.</p>
+                    </div>
+                </div>
+                <!-- Profile 5 -->
+                <div class="profile-card wellness">
+                    <img src="https://placehold.co/80x80/2ecc71/FFFFFF?text=M" alt="Avatar Marco">
+                    <h3>Wellness Marco</h3>
+                    <p>"Focused on a healthy life. Workout tips, easy recipes, and daily motivation to be your best self. #Fitness #HealthyLife"</p>
+                    <div class="comment-section">
+                        <textarea placeholder="Write your analysis here..."></textarea>
+                        <p>Remember to screenshot your comment.</p>
+                    </div>
+                </div>
+                <!-- Profile 6 -->
+                <div class="profile-card humor">
+                    <img src="https://placehold.co/80x80/e67e22/FFFFFF?text=R" alt="Avatar JustJokes">
+                    <h3>JustJokes</h3>
+                    <p>"Memes only. A daily dose of humor to survive the week. If you get offended easily, this isn't the place for you. 😂"</p>
+                    <div class="comment-section">
+                        <textarea placeholder="Write your analysis here..."></textarea>
+                        <p>Remember to screenshot your comment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="desarrollo">
+            <span class="time-estimate">Estimated Time: 10 min</span>
+            <h2>Topic Development: Key Concepts</h2>
+            <h3>What is a Digital Citizen?</h3>
+            <p>Being a digital citizen means more than just knowing how to use technology. It's about participating in the online world thoughtfully, safely, and ethically. It's about understanding that our online actions have real-world consequences for ourselves and others. According to the <strong>ISTE standards</strong>, a good digital citizen focuses on several key areas:</p>
+            <ul>
+                <li><strong>Digital Identity and Reputation:</strong> This is the persona you create online. A responsible digital citizen is aware that their posts, comments, and interactions are often permanent and contribute to how others see them. They actively work to build a positive and authentic online presence.</li>
+                <li><strong>Positive and Ethical Behavior:</strong> This involves treating others with respect and kindness online, just as you would in person. It means avoiding cyberbullying, hate speech, and spreading negativity. It also means acting legally and respecting online rules and laws.</li>
+                <li><strong>Rights and Intellectual Property:</strong> This is about understanding that content online (music, images, articles, videos) is owned by someone. A good digital citizen gives credit to creators, asks for permission before using content, and understands concepts like copyright and fair use.</li>
+                <li><strong>Privacy and Data Management:</strong> In the digital age, our personal information is valuable. A responsible digital citizen knows how to protect their private data (passwords, addresses, phone numbers) and is aware of how websites and apps collect and use their information.</li>
+            </ul>
+            <h3>Your Digital Footprint in Detail</h3>
+            <p>Your digital footprint is the complete set of data you leave behind online. It's crucial to understand its two main types:</p>
+            <ul>
+                <li><strong>Active Footprint:</strong> This is the data you share intentionally. Examples include sending an email, posting on social media, filling out an online form, or leaving a comment on a blog. You have direct control over this part of your footprint.</li>
+                <li><strong>Passive Footprint:</strong> This is the data collected without your direct action or awareness. Examples include websites tracking your IP address to know your location, apps collecting data on your usage habits, or cookies that track your browsing activity across different sites. While less visible, this data creates a detailed profile of your online behavior.</li>
+            </ul>
+            <p>Both types of footprints combine to create your overall digital identity, which can be seen by friends, family, teachers, and even future employers or universities.</p>
+        </div>
+        
+        <div class="section" id="recursos">
+            <span class="time-estimate">Estimated Time: 15 min</span>
+            <h2>Additional Resources: Deep Dive Videos</h2>
+            <p>Watch the following videos to better understand the concepts of Digital Footprint, Identity, and the importance of Digital Citizenship.</p>
+            <div class="video-grid">
+                <div class="resource-video">
+                    <iframe src="https://www.youtube.com/embed/h3qskpyi3H8" title="YouTube video on digital footprint" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="resource-video">
+                    <iframe src="https://www.youtube.com/embed/dEmI034LedI" title="YouTube video on digital citizenship" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="video-notes">
+            <h2>Video Key Points</h2>
+            <p>After watching the videos, write down the 3 most important ideas or key points from each one in the spaces below.</p>
+            <h4>Video 1: Your Digital Footprint</h4>
+            <textarea placeholder="Write the 3 key points from the first video here..." style="width: 98%; height: 100px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; font-family: inherit; resize: vertical;"></textarea>
+            
+            <h4 style="margin-top: 20px;">Video 2: Digital Citizenship</h4>
+            <textarea placeholder="Write the 3 key points from the second video here..." style="width: 98%; height: 100px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <div class="section" id="actividad">
+            <span class="time-estimate">Estimated Time: 25 min</span>
+            <h2>Main Activity: Digital Footprint Analysis of a Public Figure</h2>
+            <p>Time to investigate like a digital detective! You will analyze the digital footprint of a person of public interest.</p>
+            <ol>
+                <li>Choose a public figure you are interested in (a scientist, artist, athlete, activist, etc.).</li>
+                <li><strong>Research their digital footprint:</strong> Use search engines like Google to find information. Look at news sites, online encyclopedias (like Wikipedia), official websites, published interviews, etc.</li>
+                <li><strong>Analyze your findings:</strong> What kind of information do you find? What image does this person project online? Is their digital footprint mostly positive, negative, or neutral? What strategy do they seem to follow to build their public image?</li>
+                <li><strong>Create an analysis document:</strong> Prepare a document (in Google Docs or Word) where you answer the questions above. Include links to your sources as evidence.</li>
+                <li><strong>Write a conclusion:</strong> At the end of your document, add a paragraph with your personal conclusion. What do you think of this public figure's digital footprint? Do you think they manage it well? What did you learn from this analysis?</li>
+                <li><strong>Submission:</strong> Upload your final document to the corresponding assignment in Google Classroom.</li>
+            </ol>
+        </div>
+
+        <div class="section" id="cierre">
+            <span class="time-estimate">Estimated Time: 5 min</span>
+            <h2>Wrap-up & Commitment (Exit Ticket)</h2>
+            <p>To finish, share your commitment on our digital board. <strong>Click the button below and answer on the Padlet:</strong> What specific action will you take this week to be a better digital citizen?</p>
+            <div style="text-align: center;">
+                <a href="https://padlet.com/acampos193/what-will-i-do-to-be-a-better-digital-citizen-u2qa6mtue4o8wc48" target="_blank" class="btn-padlet">Go to the Padlet Board</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Thomas Jefferson Institute | 9th Grade Technology Class</p>
+    </footer>
+
+</body>
+</html>
