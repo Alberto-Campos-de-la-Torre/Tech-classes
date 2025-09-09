@@ -179,23 +179,63 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: white;
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--text-color);
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             z-index: 100;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .termination-gif {
+            width: 120px;
+            height: auto;
+            margin-bottom: 1rem;
         }
         #termination-overlay h2 {
             font-size: 2rem;
             margin-bottom: 1rem;
-            color: var(--accent-color);
+            color: var(--primary-color);
         }
         #termination-overlay p {
             font-size: 1.2rem;
             max-width: 80%;
+        }
+        #retry-section {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        #retry-section p {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        #retry-password-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        #retry-button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #retry-error {
+            color: var(--incorrect-text);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
         }
 
     </style>
@@ -204,8 +244,15 @@
 
     <div class="quiz-container">
         <div id="termination-overlay">
+            <img src="https://c.tenor.com/HNBWa_wyADYAAAAC/emoji-emoji-disintegrating.gif" alt="Emoji desintegrándose" class="termination-gif">
             <h2>Quiz Finalizado</h2>
-            <p>La evaluación ha terminado automáticamente.</p>
+            <p id="termination-message">La evaluación ha terminado automáticamente.</p>
+            <div id="retry-section">
+                <p>Para volver a intentarlo, introduce la contraseña:</p>
+                <input type="password" id="retry-password-input" placeholder="Contraseña de reintento">
+                <button id="retry-button">Reintentar Quiz</button>
+                <p id="retry-error">Contraseña incorrecta.</p>
+            </div>
         </div>
         
         <header>
@@ -265,6 +312,10 @@
                 if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
             }
             return null;
+        }
+
+        function eraseCookie(name) {
+            document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -443,7 +494,10 @@
             const passwordInput = document.getElementById('password-input');
             const passwordError = document.getElementById('password-error');
             const terminationOverlay = document.getElementById('termination-overlay');
-            const terminationMessage = terminationOverlay.querySelector('p');
+            const terminationMessage = terminationOverlay.querySelector('#termination-message');
+            const retryButton = document.getElementById('retry-button');
+            const retryPasswordInput = document.getElementById('retry-password-input');
+            const retryError = document.getElementById('retry-error');
 
             let userAnswers = [];
             let quizFinished = false;
@@ -456,9 +510,10 @@
                 quizForm.style.display = 'none';
                 document.querySelector('.warning-banner').style.display = 'none';
                 resultsContainer.style.display = 'none';
-                return; // Stop further script execution
+            } else {
+                setCookie('quizInProgress', 'true', 30); // Set a 30-minute cookie for the session
+                loadQuiz();
             }
-            setCookie('quizInProgress', 'true', 30); // Set a 30-minute cookie
 
             // Load questions into the form
             function loadQuiz() {
@@ -569,7 +624,16 @@
                 }
             });
 
-            loadQuiz();
+            // Handle Retry Logic
+            retryButton.addEventListener('click', () => {
+                if (retryPasswordInput.value === 'perdonalberprofe') {
+                    eraseCookie('quizInProgress');
+                    location.reload();
+                } else {
+                    retryError.style.display = 'block';
+                }
+            });
+
         });
     </script>
 
