@@ -242,7 +242,7 @@
 
     <div class="quiz-container">
         <div id="termination-overlay">
-            <img src="https://c.tenor.com/HNBWa_wyADYAAAAC/emoji-emoji-disintegrating.gif" alt="Emoji desintegrándose" class="termination-gif">
+            <img src="https://media.tenor.com/s0b7n72nNBIAAAAC/thanos-snap.gif" alt="Emoji desintegrándose" class="termination-gif">
             <h2>Quiz Finalizado</h2>
             <p id="termination-message">La evaluación ha terminado automáticamente.</p>
             <div id="retry-section">
@@ -265,7 +265,6 @@
                 </div>
 
                 <form id="quiz-form">
-                    <!-- Questions will be injected here by JavaScript -->
                     <button type="submit" class="quiz-button">Finalizar Quiz</button>
                 </form>
             </div>
@@ -328,7 +327,7 @@
             let userAnswers = [];
             let quizFinished = false;
             
-            // sessionStorage is more reliable for local files as it's cleared when the browser/tab is closed.
+            // sessionStorage funciona perfectamente en GitHub Pages.
             const storageKey = 'quizInProgress_12345';
 
             function terminateQuiz(reason) {
@@ -348,6 +347,7 @@
                 sessionStorage.removeItem(storageKey);
             }
 
+            // Esta lógica ahora funcionará correctamente al estar en un servidor.
             if (sessionStorage.getItem(storageKey) === 'true') {
                 terminateQuiz('reload');
                 return; 
@@ -452,4 +452,3 @@
 
 </body>
 </html>
-
