@@ -260,7 +260,9 @@
             padding: 0.8rem;
             border: 1px solid #ccc;
             border-radius: 5px;
-            color: #333; /* Make text visible */
+            /* **Correction:** Set background and text color for visibility */
+            background-color: white;
+            color: #333;
         }
         #retry-button {
              padding: 0.8rem 1.5rem;
@@ -272,6 +274,9 @@
              white-space: nowrap;
              font-weight: bold;
         }
+         #retry-button:hover {
+            background-color: #e0a800;
+         }
         #retry-error {
             color: #f8d7da; /* Light red for error in overlay */
             font-size: 0.9rem;
@@ -280,7 +285,7 @@
             width: 80%;
             max-width: 400px;
         }
-        
+
         /* PDF Save Instructions */
         .save-pdf-instructions {
             margin-top: 2rem;
@@ -636,15 +641,15 @@
                     passwordError.style.display = 'block';
                 }
             });
-            
+
              // --- Event listener for Retry button ---
             retryButton.addEventListener('click', () => {
                 if (retryPasswordInput.value.toLowerCase() === 'creatina') {
                     retryError.style.display = 'none';
                     terminationOverlay.style.display = 'none'; // Hide overlay
-                    
+
                     // Reset state
-                    quizFinished = false; 
+                    quizFinished = false;
                     deleteCookie('quizCampaignFinished'); // Remove finished flag
                     setCookie('quizCampaignInProgress', 'true', 30); // Reset in-progress timer
 
@@ -654,7 +659,7 @@
                     resultsContainer.style.display = 'none'; // Ensure results are hidden
 
                     // Optionally clear password field
-                    retryPasswordInput.value = ''; 
+                    retryPasswordInput.value = '';
 
                 } else {
                     retryError.style.display = 'block'; // Show error
@@ -666,13 +671,14 @@
             document.addEventListener('visibilitychange', () => {
                 // Only terminate if the quiz is in progress and tab becomes hidden
                 if (document.hidden && !quizFinished && getCookie('quizCampaignInProgress') === 'true') {
-                     // Attempt to save answers before terminating
+                     // Attempt to save answers before terminating (useful if retry implemented)
                     userAnswers = quizData.map((q, index) => {
-                        if (q.type === "mc") {
+                         if (q.type === "mc") {
                             const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
                             return selectedOption ? parseInt(selectedOption.value) : -1;
                         } else {
                             const textarea = document.querySelector(`textarea[name="question${index}"]`);
+                            // Save even partial answers
                             return textarea ? textarea.value.trim() : "";
                         }
                     });
