@@ -7,10 +7,11 @@
     <style>
         :root {
             --primary-color: #005A9C;
-            --secondary-color: #f4f4f9;
+            /* --secondary-color: #f4f4f9; /* Original light grey, replaced for white bg */
+            --secondary-color: #f8f9fa; /* Very light grey for elements */
             --text-color: #333;
             --accent-color: #FFC107;
-            --card-bg: #ffffff;
+            --card-bg: #ffffff; /* Card background remains white */
             --shadow: 0 4px 8px rgba(0,0,0,0.1);
             --correct-bg: #d4edda;
             --incorrect-bg: #f8d7da;
@@ -18,6 +19,7 @@
             --incorrect-text: #721c24;
             --warning-bg: #fff3cd;
             --warning-text: #856404;
+            --border-color: #dee2e6; /* Added border color variable */
         }
 
         body {
@@ -25,11 +27,12 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: var(--secondary-color);
+            /* **Correction:** Set body background to white */
+            background-color: #ffffff;
             color: var(--text-color);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Align top for long content */
             min-height: 100vh;
             padding: 20px 0; /* Add padding for scroll */
         }
@@ -37,7 +40,9 @@
         .quiz-container {
             width: 90%;
             max-width: 800px;
+            /* **Correction:** Use card-bg explicitly, add border for definition */
             background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             box-shadow: var(--shadow);
             margin: 20px 0;
@@ -80,7 +85,7 @@
         }
 
         .question-text {
-            font-size: 1.15rem; /* Slightly smaller */
+            font-size: 1.15rem;
             font-weight: bold;
             margin-bottom: 1rem;
             color: var(--primary-color);
@@ -88,16 +93,17 @@
 
         .answer-options label {
             display: block;
+            /* **Correction:** Use the new secondary color for options */
             background-color: var(--secondary-color);
-            padding: 0.9rem; /* Slightly smaller padding */
+            padding: 0.9rem;
             margin-bottom: 0.5rem;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color); /* Use border variable */
         }
         .answer-options label:hover {
-            background-color: #e2e6ea;
+            background-color: #e9ecef; /* Slightly darker grey on hover */
         }
         .answer-options input[type="radio"] {
             margin-right: 10px;
@@ -108,12 +114,13 @@
             width: 98%;
             min-height: 100px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color); /* Use border variable */
             border-radius: 5px;
             font-family: inherit;
             font-size: 1rem;
             resize: vertical;
             margin-top: 10px;
+            background-color: #fff; /* Ensure white background */
         }
 
 
@@ -129,7 +136,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 1.5rem; /* Add margin top */
+            margin-top: 1.5rem;
         }
         .quiz-button:hover {
             background-color: #e0a800;
@@ -142,30 +149,31 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 2rem;
-            font-size: 0.95rem; /* Smaller font for table */
+            font-size: 0.95rem;
         }
         #results-table th, #results-table td {
-            border: 1px solid #ddd;
-            padding: 10px; /* Smaller padding */
+            border: 1px solid var(--border-color); /* Use border variable */
+            padding: 10px;
             text-align: left;
-            vertical-align: top; /* Align top for open answers */
+            vertical-align: top;
         }
         #results-table th {
             background-color: var(--primary-color);
             color: white;
         }
         #results-table tr:nth-child(even) {
+            /* **Correction:** Use the new secondary color for table rows */
             background-color: var(--secondary-color);
         }
          /* Style for open answer cells */
         .open-answer-cell {
-            white-space: pre-wrap; /* Preserve line breaks */
+            white-space: pre-wrap;
             font-style: italic;
             color: #555;
         }
 
 
-        .correct-answer-cell { /* Specific class for correct answer text */
+        .correct-answer-cell {
              font-weight: bold;
              color: var(--correct-text);
         }
@@ -184,9 +192,8 @@
             text-decoration: line-through;
             opacity: 0.7;
          }
-         /* Style for open-ended rows in results */
         .open-ended-row td:first-child::before {
-             content: '✎ '; /* Pencil icon */
+             content: '✎ ';
              color: var(--primary-color);
              font-weight: bold;
         }
@@ -196,12 +203,12 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            margin-bottom: 20px; /* Space before save instructions */
+            margin-bottom: 20px;
         }
         #password-input {
             flex-grow: 1;
             padding: 0.8rem;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color); /* Use border variable */
             border-radius: 5px;
         }
         #reveal-button {
@@ -229,7 +236,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
             color: white;
-            display: none; /* Initially hidden */
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -247,7 +254,7 @@
             max-width: 80%;
             margin-bottom: 1.5rem;
         }
-        #retry-section { /* Container for retry elements */
+        #retry-section {
             margin-top: 1rem;
             display: flex;
             gap: 10px;
@@ -258,9 +265,8 @@
         #retry-password-input {
             flex-grow: 1;
             padding: 0.8rem;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color); /* Use border variable */
             border-radius: 5px;
-            /* **Correction:** Set background and text color for visibility */
             background-color: white;
             color: #333;
         }
@@ -278,10 +284,10 @@
             background-color: #e0a800;
          }
         #retry-error {
-            color: #f8d7da; /* Light red for error in overlay */
+            color: #f8d7da;
             font-size: 0.9rem;
             margin-top: 10px;
-            display: none; /* Initially hidden */
+            display: none;
             width: 80%;
             max-width: 400px;
         }
@@ -290,8 +296,9 @@
         .save-pdf-instructions {
             margin-top: 2rem;
             padding: 1.5rem;
+             /* **Correction:** Use the new secondary color */
             background-color: var(--secondary-color);
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color); /* Use border variable */
             border-radius: 8px;
         }
         .save-pdf-instructions h3 {
@@ -457,7 +464,7 @@
                 quizForm.style.display = 'none'; // Hide form
                 document.querySelector('.warning-banner').style.display = 'none'; // Hide warning
                 resultsContainer.style.display = 'none'; // Hide results initially
-                setCookie('quizCampaignFinished', 'true', 1440); // Set finished cookie
+                setCookie('quizCampaignFinished', 'true', 1440); // Set finished cookie for 1 day
                 deleteCookie('quizCampaignInProgress'); // Delete in-progress cookie
             }
 
