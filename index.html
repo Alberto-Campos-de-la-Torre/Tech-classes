@@ -44,7 +44,7 @@
             box-shadow: var(--shadow);
             margin: 20px 0;
             overflow: hidden;
-            position: relative; /* Needed for absolute positioning of overlay */
+            position: relative; /* Needed for absolute positioning of overlay if NOT fixed */
         }
 
         header {
@@ -219,7 +219,7 @@
 
         /* Termination Overlay */
         #termination-overlay {
-            /* **Correction:** Use fixed position to cover the entire viewport */
+            /* **Correction:** Use fixed position */
             position: fixed;
             top: 0;
             left: 0;
@@ -260,9 +260,8 @@
             padding: 0.8rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            /* **Ensure Visibility:** White background, dark text */
-            background-color: white;
-            color: #333;
+            background-color: white; /* White background */
+            color: #333; /* Dark text */
             font-size: 1rem;
         }
         #retry-button {
@@ -280,8 +279,7 @@
             background-color: #e0a800; /* Darker yellow */
          }
         #retry-error {
-            /* **Ensure Visibility:** Light red text on dark background */
-            color: #f8d7da;
+            color: #f8d7da; /* Light red text */
             font-size: 0.9rem;
             margin-top: 10px;
             display: none; /* Initially hidden */
