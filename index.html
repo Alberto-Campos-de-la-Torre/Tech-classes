@@ -196,6 +196,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            margin-bottom: 20px; /* Space before save instructions */
         }
         #password-input {
             flex-grow: 1;
@@ -228,7 +229,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
             color: white;
-            display: none;
+            display: none; /* Initially hidden */
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -244,6 +245,59 @@
         #termination-overlay p {
             font-size: 1.2rem;
             max-width: 80%;
+            margin-bottom: 1.5rem;
+        }
+        #retry-section { /* Container for retry elements */
+            margin-top: 1rem;
+            display: flex;
+            gap: 10px;
+            width: 80%;
+            max-width: 400px;
+            align-items: center;
+        }
+        #retry-password-input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #333; /* Make text visible */
+        }
+        #retry-button {
+             padding: 0.8rem 1.5rem;
+             background-color: var(--accent-color);
+             color: var(--text-color);
+             border: none;
+             border-radius: 5px;
+             cursor: pointer;
+             white-space: nowrap;
+             font-weight: bold;
+        }
+        #retry-error {
+            color: #f8d7da; /* Light red for error in overlay */
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none; /* Initially hidden */
+            width: 80%;
+            max-width: 400px;
+        }
+        
+        /* PDF Save Instructions */
+        .save-pdf-instructions {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--secondary-color);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .save-pdf-instructions h3 {
+             color: var(--primary-color);
+             margin-top: 0;
+        }
+        .save-pdf-instructions ol {
+             padding-left: 20px;
+        }
+         .save-pdf-instructions li {
+             margin-bottom: 8px;
         }
 
     </style>
@@ -253,7 +307,13 @@
     <div class="quiz-container">
         <div id="termination-overlay">
             <h2>Examen Finalizado</h2>
-            <p>La evaluación ha terminado automáticamente.</p>
+            <p id="termination-message">La evaluación ha terminado automáticamente.</p>
+            <!-- Retry Section -->
+            <div id="retry-section">
+                <input type="password" id="retry-password-input" placeholder="Contraseña para reintentar">
+                <button type="button" id="retry-button">Reintentar Examen</button>
+            </div>
+            <p id="retry-error">Contraseña incorrecta.</p>
         </div>
 
         <header>
@@ -262,7 +322,7 @@
         </header>
 
         <div class="warning-banner">
-            ⚠️ Atención: Si cambias de pestaña o recargas la página, el examen se finalizará automáticamente.
+            ⚠️ Atención: Si cambias de pestaña o recargas la página, el examen se finalizará automáticamente. Puedes reintentar con la contraseña si esto ocurre.
         </div>
 
         <form id="quiz-form">
@@ -289,7 +349,19 @@
                 <input type="password" id="password-input" placeholder="Introduce la contraseña">
                 <button type="button" id="reveal-button">Revelar Respuestas</button>
             </div>
-             <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
+            <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
+
+            <!-- Save as PDF Instructions -->
+            <div class="save-pdf-instructions">
+                <h3>Guardar Respuestas como PDF</h3>
+                <p>Una vez que hayas revelado las respuestas correctas, puedes guardar esta página como un archivo PDF para tus registros:</p>
+                <ol>
+                    <li>Presiona <strong>Ctrl + P</strong> (en Windows/Linux) o <strong>Cmd + P</strong> (en Mac) para abrir el diálogo de impresión.</li>
+                    <li>En el campo "Destino" o "Impresora", selecciona la opción <strong>"Guardar como PDF"</strong> o "Microsoft Print to PDF".</li>
+                    <li>Ajusta cualquier otra configuración si es necesario (como 'Diseño' a 'Vertical').</li>
+                    <li>Haz clic en <strong>"Guardar"</strong> y elige dónde quieres guardar el archivo PDF.</li>
+                </ol>
+            </div>
         </div>
     </div>
 
@@ -302,7 +374,7 @@
                 date.setTime(date.getTime() + (minutes * 60 * 1000));
                 expires = "; expires=" + date.toUTCString();
             }
-            document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax"; // Added SameSite
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
         }
 
         function getCookie(name) {
@@ -321,27 +393,27 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- QUIZ DATA ---
-            const quizData = [
-                 // Q1 (Multiple Choice) - Removed Lesson Ref
+            // --- QUIZ DATA --- (Same questions as before)
+             const quizData = [
+                 // Q1 (Multiple Choice)
                 { question: "En tu propia campaña, ¿cuál fue el propósito principal al definir la Misión, Visión y Valores?", options: ["Crear un documento obligatorio para el portafolio.", "Establecer la identidad central y el propósito de la campaña para guiar todas las decisiones.", "Elegir los colores y fuentes para el sitio web.", "Decidir qué páginas incluir en el mapa del sitio."], answer: 1, type: "mc" },
-                // Q2 (Multiple Choice) - Removed Lesson Ref
+                // Q2 (Multiple Choice)
                 { question: "¿Cuál de las siguientes acciones representa mejor la creación de una 'Huella Digital Activa'?", options: ["Visitar un sitio web que utiliza cookies para rastrear tu navegación.", "Una aplicación recopilando datos sobre cuánto tiempo la usas.", "Publicar una foto y un comentario en una red social sobre tu campaña.", "Recibir un correo electrónico publicitario basado en tus búsquedas."], answer: 2, type: "mc" },
-                 // Q3 (Multiple Choice) - Removed Lesson Ref
+                 // Q3 (Multiple Choice)
                 { question: "Al diseñar el sitio web de tu campaña, ¿por qué fue importante crear un 'Wireframe' antes de empezar a construir en Wix?", options: ["Para elegir la plantilla de Wix correcta.", "Para planificar la estructura, disposición y jerarquía visual del contenido sin distracciones de diseño.", "Para escribir el texto final (copy) de la página de inicio.", "Para probar si los enlaces internos funcionaban correctamente."], answer: 1, type: "mc" },
-                 // Q4 (Multiple Choice) - Removed Lesson Ref
+                 // Q4 (Multiple Choice)
                 { question: "Imagina que encuentras un artículo en línea con estadísticas impactantes sobre la causa de tu campaña. Según el test C.R.A.P., ¿cuál es el primer paso MÁS importante antes de usar esa información en tu sitio?", options: ["Verificar la 'Currency' (Actualidad): ¿Es la información reciente?", "Verificar la 'Authority' (Autoridad): ¿Quién es el autor o la fuente? ¿Son expertos creíbles?", "Verificar la 'Relevance' (Relevancia): ¿Responde directamente a las preguntas de tu campaña?", "Verificar el 'Purpose' (Propósito): ¿El artículo intenta informar, persuadir o vender algo?"], answer: 1, type: "mc" },
-                 // Q5 (Multiple Choice) - Removed Lesson Ref
+                 // Q5 (Multiple Choice)
                 { question: "En tu página 'Involúcrate', ¿por qué es importante ofrecer diferentes maneras para que la gente apoye tu causa?", options: ["Para hacer la página más larga y completa.", "Para permitir que personas con diferentes niveles de compromiso (tiempo, dinero, habilidad) puedan participar.", "Para cumplir con los requisitos mínimos de la rúbrica.", "Para poder añadir más botones y enlaces al sitio web."], answer: 1, type: "mc" },
-                 // Q6 (Multiple Choice) - Removed Lesson Ref
+                 // Q6 (Multiple Choice)
                 { question: "Define 'Accesibilidad Web' en el contexto de tu campaña.", options: ["Que el sitio web se cargue rápidamente en cualquier dispositivo.", "Que el diseño del sitio web sea moderno y atractivo visualmente.", "Diseñar tu sitio web para que pueda ser utilizado por personas con diversas habilidades (visuales, auditivas, motoras, cognitivas).", "Asegurarse de que el sitio web esté disponible en varios idiomas."], answer: 2, type: "mc" },
-                 // Q7 (Multiple Choice) - Removed Lesson Ref
+                 // Q7 (Multiple Choice)
                 { question: "Si compartes accidentalmente una noticia falsa sobre tu causa porque creías que era verdad, ¿cómo se clasifica esa acción?", options: ["Desinformación (Disinformation)", "Clickbait", "Mala información (Misinformation)", "Libertad de expresión"], answer: 2, type: "mc" },
-                 // Q8 (Multiple Choice) - Removed Lesson Ref
+                 // Q8 (Multiple Choice)
                 { question: "Al escribir el contenido para tu página de inicio, ¿qué significa el concepto 'Above the fold'?", options: ["El pie de página del sitio web.", "Todo el contenido visible en la pantalla sin necesidad de hacer scroll.", "El menú de navegación principal.", "El contenido más importante de todo el sitio web."], answer: 1, type: "mc" },
-                 // Q9 (Multiple Choice) - Removed Lesson Ref
+                 // Q9 (Multiple Choice)
                 { question: "Se añadieron secciones como 'Blog/Noticias' y 'FAQ'. ¿Cuál es el objetivo estratégico principal de incluir estas secciones en el sitio de tu campaña?", options: ["Aumentar el número total de páginas del sitio web.", "Ofrecer más oportunidades para añadir imágenes y videos.", "Proporcionar información actualizada, responder preguntas comunes y mantener a la audiencia comprometida a largo plazo.", "Facilitar que los miembros del equipo practiquen la escritura."], answer: 2, type: "mc" },
-                 // Q10 (Multiple Choice) - Removed Lesson Ref
+                 // Q10 (Multiple Choice)
                 { question: "El modelo de retroalimentación 'I Like, I Wish, What If...' se utiliza para:", options: ["Criticar duramente los proyectos de otros equipos.", "Proporcionar comentarios estructurados, positivos y orientados a la mejora.", "Decidir la calificación final del proyecto.", "Simplemente decir si te gusta o no un sitio web."], answer: 1, type: "mc" },
                 // --- Open Ended Questions ---
                 // Q11 (Open Ended)
@@ -363,36 +435,47 @@
             const passwordInput = document.getElementById('password-input');
             const passwordError = document.getElementById('password-error');
             const terminationOverlay = document.getElementById('termination-overlay');
-            const terminationMessage = terminationOverlay.querySelector('p');
+            const terminationMessage = document.getElementById('termination-message'); // Target message specifically
+            const retryButton = document.getElementById('retry-button');
+            const retryPasswordInput = document.getElementById('retry-password-input');
+            const retryError = document.getElementById('retry-error');
 
-            let userAnswers = []; // Will store indices for MC, strings for open-ended
-            let quizFinished = false;
+            let userAnswers = [];
+            let quizFinished = false; // Flag to prevent multiple submissions/terminations
+
+            // --- Function to trigger termination ---
+            function terminateQuiz(message) {
+                 if(quizFinished) return; // Prevent multiple terminations
+                quizFinished = true;
+                terminationMessage.textContent = message; // Set the specific message
+                terminationOverlay.style.display = 'flex';
+                quizForm.style.display = 'none'; // Hide form
+                document.querySelector('.warning-banner').style.display = 'none'; // Hide warning
+                resultsContainer.style.display = 'none'; // Hide results initially
+                setCookie('quizCampaignFinished', 'true', 1440); // Set finished cookie
+                deleteCookie('quizCampaignInProgress'); // Delete in-progress cookie
+            }
+
 
             // --- RELOAD & COOKIE CHECK ---
-             if (getCookie('quizCampaignFinished') === 'true') {
-                quizFinished = true;
-                terminationMessage.textContent = "Ya has completado este examen.";
-                terminationOverlay.style.display = 'flex';
-                quizForm.style.display = 'none';
-                document.querySelector('.warning-banner').style.display = 'none';
-                resultsContainer.style.display = 'none';
-                deleteCookie('quizCampaignInProgress');
-                return;
+            if (getCookie('quizCampaignFinished') === 'true') {
+                 // If already finished, show termination screen directly
+                terminateQuiz("Ya has completado este examen.");
+                return; // Stop further script execution
             } else if (getCookie('quizCampaignInProgress') === 'true') {
-                 quizFinished = true;
-                terminationMessage.textContent = "El examen ha terminado porque se ha recargado la página.";
-                terminationOverlay.style.display = 'flex';
-                quizForm.style.display = 'none';
-                document.querySelector('.warning-banner').style.display = 'none';
-                resultsContainer.style.display = 'none';
-                setCookie('quizCampaignFinished', 'true', 1440);
-                deleteCookie('quizCampaignInProgress');
-                return;
+                 // If reloaded while in progress, trigger termination
+                terminateQuiz("El examen ha terminado porque se ha recargado la página.");
+                 return;
             }
-            setCookie('quizCampaignInProgress', 'true', 30); // Set 30-min in-progress cookie
+             // If neither cookie exists, start the quiz
+            setCookie('quizCampaignInProgress', 'true', 30); // Set a 30-minute in-progress cookie
 
             // Load questions into the form
             function loadQuiz() {
+                // Clear previous questions if any (useful for retry)
+                const existingQuestions = quizForm.querySelectorAll('.question-block');
+                existingQuestions.forEach(q => q.remove());
+
                 const quizHtml = quizData.map((q, index) => {
                     let answerHtml = '';
                     if (q.type === "mc") {
@@ -424,27 +507,10 @@
                 submitButton.insertAdjacentHTML('beforebegin', quizHtml);
             }
 
+            // --- Function to handle quiz submission ---
             function submitAndShowResults() {
-                if(quizFinished) return;
-                quizFinished = true;
-                setCookie('quizCampaignFinished', 'true', 1440); // Mark as finished
-                deleteCookie('quizCampaignInProgress'); // Remove in-progress status
+                if(quizFinished) return; // Prevent resubmission
 
-                userAnswers = quizData.map((q, index) => {
-                    if (q.type === "mc") {
-                        const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                        return selectedOption ? parseInt(selectedOption.value) : -1; // -1 for unanswered MC
-                    } else {
-                        const textarea = document.querySelector(`textarea[name="question${index}"]`);
-                        return textarea ? textarea.value.trim() : ""; // Get text or empty string
-                    }
-                });
-
-                displayResults();
-            }
-
-            quizForm.addEventListener('submit', function(e) {
-                e.preventDefault();
                  // Check if all questions are answered/filled
                 let allAnswered = true;
                 for (let i = 0; i < quizData.length; i++) {
@@ -461,38 +527,57 @@
                         }
                     }
                 }
-
                 if (!allAnswered) {
                     alert("Por favor, responde todas las preguntas antes de finalizar.");
-                    return;
+                    return false; // Indicate submission failed
                 }
 
+                // If all answered, proceed to finish
+                quizFinished = true;
+                setCookie('quizCampaignFinished', 'true', 1440); // Mark as finished
+                deleteCookie('quizCampaignInProgress'); // Remove in-progress status
+
+                userAnswers = quizData.map((q, index) => {
+                    if (q.type === "mc") {
+                        const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                        return selectedOption ? parseInt(selectedOption.value) : -1; // -1 for unanswered MC
+                    } else {
+                        const textarea = document.querySelector(`textarea[name="question${index}"]`);
+                        return textarea ? textarea.value.trim() : ""; // Get text or empty string
+                    }
+                });
+
+                displayResults();
+                return true; // Indicate submission succeeded
+            }
+
+            // --- Event listener for the form submission ---
+            quizForm.addEventListener('submit', function(e) {
+                e.preventDefault();
                 submitAndShowResults();
             });
 
+            // --- Function to display results table ---
             function displayResults() {
                 let tableHtml = '';
                 userAnswers.forEach((answer, questionIndex) => {
                     const question = quizData[questionIndex];
                     let userAnswerText = '';
-                    let rowClass = ''; // For styling open-ended rows
+                    let rowClass = '';
 
                     if (question.type === "mc") {
                         userAnswerText = (answer === -1) ? "No respondida" : question.options[answer];
                     } else {
-                        // Sanitize open-ended answers before displaying
                         const tempDiv = document.createElement('div');
                         tempDiv.textContent = answer || "No respondida";
-                        userAnswerText = tempDiv.innerHTML; // Use innerHTML to show encoded entities
-                        rowClass = 'open-ended-row'; // Add class for open-ended
+                        userAnswerText = tempDiv.innerHTML;
+                        rowClass = 'open-ended-row';
                     }
-
 
                     tableHtml += `
                         <tr data-question-index="${questionIndex}" class="${rowClass}">
                             <td>${questionIndex + 1}</td>
                             <td class="user-answer-cell ${question.type === 'open' ? 'open-answer-cell' : ''}">${userAnswerText}</td>
-                            <!-- Correct answer cell added later for MC -->
                         </tr>
                     `;
                 });
@@ -503,13 +588,13 @@
                 resultsContainer.style.display = 'block';
             }
 
+            // --- Event listener for revealing answers ---
             revealButton.addEventListener('click', function() {
                 // Use 'creatina' as the password, case-insensitive
                 if (passwordInput.value.toLowerCase() === 'creatina') {
                     passwordError.style.display = 'none';
 
                     let headerRow = document.querySelector('#results-table thead tr');
-                    // Add "Respuesta Correcta" header only if it doesn't exist and there are MC questions
                     const hasMC = quizData.some(q => q.type === 'mc');
                     if (hasMC && headerRow.cells.length < 3) {
                         const th = document.createElement('th');
@@ -522,9 +607,7 @@
                         const questionIndex = parseInt(row.dataset.questionIndex);
                         const question = quizData[questionIndex];
 
-                        // Only process MC questions for revealing answers
                         if (question.type === "mc") {
-                             // Check if the correct answer cell already exists for this row
                             if (row.cells.length > 2) return;
 
                             const userAnswerIndex = userAnswers[questionIndex];
@@ -535,34 +618,66 @@
                             correctAnswerCell.classList.add('correct-answer-cell');
                             row.appendChild(correctAnswerCell);
 
-                            // Add row styling based on correctness
                             if (userAnswerIndex === correctAnswerIndex) {
                                 row.classList.add('correct-row');
                             } else {
                                 row.classList.add('incorrect-row');
                             }
                         } else if (hasMC && row.cells.length < 3) {
-                             // If it's an open-ended question but we added the 3rd header for MC, add an empty cell
                              const emptyCell = document.createElement('td');
-                             emptyCell.textContent = '-'; // Placeholder
+                             emptyCell.textContent = '-';
                              row.appendChild(emptyCell);
                         }
                     });
 
-                    document.getElementById('reveal-section').style.display = 'none'; // Hide password section
+                    document.getElementById('reveal-section').style.display = 'none';
 
                 } else {
                     passwordError.style.display = 'block';
                 }
             });
+            
+             // --- Event listener for Retry button ---
+            retryButton.addEventListener('click', () => {
+                if (retryPasswordInput.value.toLowerCase() === 'creatina') {
+                    retryError.style.display = 'none';
+                    terminationOverlay.style.display = 'none'; // Hide overlay
+                    
+                    // Reset state
+                    quizFinished = false; 
+                    deleteCookie('quizCampaignFinished'); // Remove finished flag
+                    setCookie('quizCampaignInProgress', 'true', 30); // Reset in-progress timer
+
+                    // Restore UI
+                    quizForm.style.display = 'block';
+                    document.querySelector('.warning-banner').style.display = 'block';
+                    resultsContainer.style.display = 'none'; // Ensure results are hidden
+
+                    // Optionally clear password field
+                    retryPasswordInput.value = ''; 
+
+                } else {
+                    retryError.style.display = 'block'; // Show error
+                }
+            });
+
 
             // --- TAB CHANGE / VISIBILITY DETECTION ---
             document.addEventListener('visibilitychange', () => {
-                if (document.hidden && !quizFinished) {
-                    submitAndShowResults();
-                    resultsContainer.style.display = 'none';
-                    terminationMessage.textContent = "El examen ha terminado automáticamente por haber cambiado de pestaña o ventana.";
-                    terminationOverlay.style.display = 'flex';
+                // Only terminate if the quiz is in progress and tab becomes hidden
+                if (document.hidden && !quizFinished && getCookie('quizCampaignInProgress') === 'true') {
+                     // Attempt to save answers before terminating
+                    userAnswers = quizData.map((q, index) => {
+                        if (q.type === "mc") {
+                            const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                            return selectedOption ? parseInt(selectedOption.value) : -1;
+                        } else {
+                            const textarea = document.querySelector(`textarea[name="question${index}"]`);
+                            return textarea ? textarea.value.trim() : "";
+                        }
+                    });
+                    // Note: We don't displayResults here, just terminate
+                    terminateQuiz("El examen ha terminado automáticamente por haber cambiado de pestaña o ventana.");
                 }
             });
 
