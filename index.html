@@ -219,33 +219,32 @@
 
         /* Termination Overlay */
         #termination-overlay {
-            /* **Correction:** Use fixed position */
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw; /* Cover full viewport width */
-            height: 100vh; /* Cover full viewport height */
-            background-color: rgba(0, 0, 0, 0.85); /* Dark semi-transparent background */
-            color: white; /* Default text color for overlay */
-            display: none; /* Initially hidden */
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            z-index: 1000; /* Ensure it's on top of everything */
+            z-index: 1000;
             padding: 20px;
             box-sizing: border-box;
         }
         #termination-overlay h2 {
             font-size: 2rem;
             margin-bottom: 1rem;
-            color: var(--accent-color); /* Yellow title */
+            color: var(--accent-color);
         }
         #termination-overlay p {
             font-size: 1.2rem;
             max-width: 80%;
             margin-bottom: 1.5rem;
-            color: white; /* Ensure paragraph text is white */
+            color: white;
         }
         #retry-section {
             margin-top: 1rem;
@@ -260,14 +259,14 @@
             padding: 0.8rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            background-color: white; /* White background */
-            color: #333; /* Dark text */
+            background-color: white;
+            color: #333;
             font-size: 1rem;
         }
         #retry-button {
              padding: 0.8rem 1.5rem;
-             background-color: var(--accent-color); /* Yellow background */
-             color: var(--text-color); /* Dark text */
+             background-color: var(--accent-color);
+             color: var(--text-color);
              border: none;
              border-radius: 5px;
              cursor: pointer;
@@ -276,13 +275,13 @@
              font-size: 1rem;
         }
          #retry-button:hover {
-            background-color: #e0a800; /* Darker yellow */
+            background-color: #e0a800;
          }
         #retry-error {
-            color: #f8d7da; /* Light red text */
+            color: #f8d7da;
             font-size: 0.9rem;
             margin-top: 10px;
-            display: none; /* Initially hidden */
+            display: none;
             width: 80%;
             max-width: 400px;
         }
@@ -441,44 +440,40 @@
             const passwordInput = document.getElementById('password-input');
             const passwordError = document.getElementById('password-error');
             const terminationOverlay = document.getElementById('termination-overlay');
-            const terminationMessage = document.getElementById('termination-message'); // Target message specifically
+            const terminationMessage = document.getElementById('termination-message');
             const retryButton = document.getElementById('retry-button');
             const retryPasswordInput = document.getElementById('retry-password-input');
             const retryError = document.getElementById('retry-error');
 
             let userAnswers = [];
-            let quizFinished = false; // Flag to prevent multiple submissions/terminations
+            let quizFinished = false;
+            const correctPassword = 'proteina'; // Set the correct password
 
             // --- Function to trigger termination ---
             function terminateQuiz(message) {
-                 if(quizFinished) return; // Prevent multiple terminations
+                 if(quizFinished) return;
                 quizFinished = true;
-                terminationMessage.textContent = message; // Set the specific message
+                terminationMessage.textContent = message;
                 terminationOverlay.style.display = 'flex';
-                quizForm.style.display = 'none'; // Hide form
-                document.querySelector('.warning-banner').style.display = 'none'; // Hide warning
-                resultsContainer.style.display = 'none'; // Hide results initially
-                setCookie('quizCampaignFinished', 'true', 1440); // Set finished cookie for 1 day
-                deleteCookie('quizCampaignInProgress'); // Delete in-progress cookie
+                quizForm.style.display = 'none';
+                document.querySelector('.warning-banner').style.display = 'none';
+                resultsContainer.style.display = 'none';
+                setCookie('quizCampaignFinished', 'true', 1440);
+                deleteCookie('quizCampaignInProgress');
             }
-
 
             // --- RELOAD & COOKIE CHECK ---
             if (getCookie('quizCampaignFinished') === 'true') {
-                 // If already finished, show termination screen directly
                 terminateQuiz("Ya has completado este examen.");
-                return; // Stop further script execution
+                return;
             } else if (getCookie('quizCampaignInProgress') === 'true') {
-                 // If reloaded while in progress, trigger termination
                 terminateQuiz("El examen ha terminado porque se ha recargado la página.");
                  return;
             }
-             // If neither cookie exists, start the quiz
-            setCookie('quizCampaignInProgress', 'true', 30); // Set a 30-minute in-progress cookie
+            setCookie('quizCampaignInProgress', 'true', 30);
 
-            // Load questions into the form
+            // --- Load questions into the form ---
             function loadQuiz() {
-                // Clear previous questions if any (useful for retry)
                 const existingQuestions = quizForm.querySelectorAll('.question-block');
                 existingQuestions.forEach(q => q.remove());
 
@@ -500,77 +495,64 @@
                                         <textarea name="question${index}" placeholder="Escribe tu respuesta aquí..." required></textarea>
                                      </div>`;
                     }
-
                     return `
                         <div class="question-block">
                             <p class="question-text">${index + 1}. ${q.question}</p>
                             ${answerHtml}
-                        </div>
-                    `;
+                        </div>`;
                 }).join('');
-
                 const submitButton = quizForm.querySelector('.quiz-button');
                 submitButton.insertAdjacentHTML('beforebegin', quizHtml);
             }
 
-            // --- Function to handle quiz submission ---
+            // --- Handle quiz submission ---
             function submitAndShowResults() {
-                if(quizFinished) return; // Prevent resubmission
+                if(quizFinished) return;
 
-                 // Check if all questions are answered/filled
                 let allAnswered = true;
                 for (let i = 0; i < quizData.length; i++) {
                     if (quizData[i].type === "mc") {
-                        if (!document.querySelector(`input[name="question${i}"]:checked`)) {
-                            allAnswered = false;
-                            break;
-                        }
+                        if (!document.querySelector(`input[name="question${i}"]:checked`)) { allAnswered = false; break; }
                     } else {
                         const textarea = document.querySelector(`textarea[name="question${i}"]`);
-                        if (!textarea || textarea.value.trim() === "") {
-                             allAnswered = false;
-                             break;
-                        }
+                        if (!textarea || textarea.value.trim() === "") { allAnswered = false; break; }
                     }
                 }
                 if (!allAnswered) {
                     alert("Por favor, responde todas las preguntas antes de finalizar.");
-                    return false; // Indicate submission failed
+                    return false;
                 }
 
-                // If all answered, proceed to finish
                 quizFinished = true;
-                setCookie('quizCampaignFinished', 'true', 1440); // Mark as finished
-                deleteCookie('quizCampaignInProgress'); // Remove in-progress status
+                setCookie('quizCampaignFinished', 'true', 1440);
+                deleteCookie('quizCampaignInProgress');
 
                 userAnswers = quizData.map((q, index) => {
                     if (q.type === "mc") {
                         const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                        return selectedOption ? parseInt(selectedOption.value) : -1; // -1 for unanswered MC
+                        return selectedOption ? parseInt(selectedOption.value) : -1;
                     } else {
                         const textarea = document.querySelector(`textarea[name="question${index}"]`);
-                        return textarea ? textarea.value.trim() : ""; // Get text or empty string
+                        return textarea ? textarea.value.trim() : "";
                     }
                 });
 
                 displayResults();
-                return true; // Indicate submission succeeded
+                return true;
             }
 
-            // --- Event listener for the form submission ---
             quizForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 submitAndShowResults();
             });
 
-            // --- Function to display results table ---
+            // --- Display results table ---
             function displayResults() {
                 let tableHtml = '';
                 userAnswers.forEach((answer, questionIndex) => {
                     const question = quizData[questionIndex];
                     let userAnswerText = '';
                     let rowClass = '';
-
                     if (question.type === "mc") {
                         userAnswerText = (answer === -1) ? "No respondida" : question.options[answer];
                     } else {
@@ -579,111 +561,88 @@
                         userAnswerText = tempDiv.innerHTML;
                         rowClass = 'open-ended-row';
                     }
-
-                    tableHtml += `
-                        <tr data-question-index="${questionIndex}" class="${rowClass}">
-                            <td>${questionIndex + 1}</td>
-                            <td class="user-answer-cell ${question.type === 'open' ? 'open-answer-cell' : ''}">${userAnswerText}</td>
-                        </tr>
-                    `;
+                    tableHtml += `<tr data-question-index="${questionIndex}" class="${rowClass}"><td>${questionIndex + 1}</td><td class="user-answer-cell ${question.type === 'open' ? 'open-answer-cell' : ''}">${userAnswerText}</td></tr>`;
                 });
-
                 resultsBody.innerHTML = tableHtml;
                 quizForm.style.display = 'none';
                 document.querySelector('.warning-banner').style.display = 'none';
                 resultsContainer.style.display = 'block';
             }
 
-            // --- Event listener for revealing answers ---
+            // --- Reveal answers logic ---
             revealButton.addEventListener('click', function() {
-                // Use 'creatina' as the password, case-insensitive
-                if (passwordInput.value.toLowerCase() === 'creatina') {
+                if (passwordInput.value.toLowerCase() === correctPassword) {
                     passwordError.style.display = 'none';
-
                     let headerRow = document.querySelector('#results-table thead tr');
                     const hasMC = quizData.some(q => q.type === 'mc');
                     if (hasMC && headerRow.cells.length < 3) {
-                        const th = document.createElement('th');
-                        th.textContent = 'Respuesta Correcta';
-                        headerRow.appendChild(th);
+                        const th = document.createElement('th'); th.textContent = 'Respuesta Correcta'; headerRow.appendChild(th);
                     }
-
                     const rows = resultsBody.querySelectorAll('tr');
                     rows.forEach(row => {
                         const questionIndex = parseInt(row.dataset.questionIndex);
                         const question = quizData[questionIndex];
-
                         if (question.type === "mc") {
                             if (row.cells.length > 2) return;
-
                             const userAnswerIndex = userAnswers[questionIndex];
                             const correctAnswerIndex = question.answer;
-
                             const correctAnswerCell = document.createElement('td');
                             correctAnswerCell.textContent = question.options[correctAnswerIndex];
                             correctAnswerCell.classList.add('correct-answer-cell');
                             row.appendChild(correctAnswerCell);
-
-                            if (userAnswerIndex === correctAnswerIndex) {
-                                row.classList.add('correct-row');
-                            } else {
-                                row.classList.add('incorrect-row');
-                            }
+                            row.classList.add(userAnswerIndex === correctAnswerIndex ? 'correct-row' : 'incorrect-row');
                         } else if (hasMC && row.cells.length < 3) {
-                             const emptyCell = document.createElement('td');
-                             emptyCell.textContent = '-';
-                             row.appendChild(emptyCell);
+                             const emptyCell = document.createElement('td'); emptyCell.textContent = '-'; row.appendChild(emptyCell);
                         }
                     });
-
                     document.getElementById('reveal-section').style.display = 'none';
-
                 } else {
                     passwordError.style.display = 'block';
                 }
             });
 
-             // --- Event listener for Retry button ---
+             // --- Retry button logic ---
             retryButton.addEventListener('click', () => {
-                if (retryPasswordInput.value.toLowerCase() === 'creatina') {
+                 // Check the password
+                if (retryPasswordInput.value.toLowerCase() === correctPassword) {
                     retryError.style.display = 'none';
-                    terminationOverlay.style.display = 'none'; // Hide overlay
+                    terminationOverlay.style.display = 'none'; // Hide the overlay
 
-                    // Reset state
-                    quizFinished = false;
-                    deleteCookie('quizCampaignFinished'); // Remove finished flag
-                    setCookie('quizCampaignInProgress', 'true', 30); // Reset in-progress timer
+                    // **Reset the quiz state completely**
+                    quizFinished = false; // Allow submission again
+                    userAnswers = []; // Clear stored answers
+                    deleteCookie('quizCampaignFinished'); // Remove the finished flag
+                    setCookie('quizCampaignInProgress', 'true', 30); // Reset the in-progress timer
 
-                    // Restore UI
-                    quizForm.style.display = 'block';
-                    document.querySelector('.warning-banner').style.display = 'block';
-                    resultsContainer.style.display = 'none'; // Ensure results are hidden
+                    // Restore UI elements
+                    resultsContainer.style.display = 'none'; // Hide results section
+                    quizForm.style.display = 'block'; // Show the form again
+                    document.querySelector('.warning-banner').style.display = 'block'; // Show warning
 
-                    // Optionally clear password field
+                    // **Reload questions to reset selections**
+                    loadQuiz();
+
+                    // Optionally clear the password field
                     retryPasswordInput.value = '';
 
                 } else {
-                    retryError.style.display = 'block'; // Show error
+                    retryError.style.display = 'block'; // Show password error
                 }
             });
 
-
             // --- TAB CHANGE / VISIBILITY DETECTION ---
             document.addEventListener('visibilitychange', () => {
-                // Only terminate if the quiz is in progress and tab becomes hidden
                 if (document.hidden && !quizFinished && getCookie('quizCampaignInProgress') === 'true') {
-                     // Attempt to save answers before terminating (useful if retry implemented)
+                    // Try to save answers just before terminating
                     userAnswers = quizData.map((q, index) => {
                          if (q.type === "mc") {
                             const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
                             return selectedOption ? parseInt(selectedOption.value) : -1;
                         } else {
                             const textarea = document.querySelector(`textarea[name="question${index}"]`);
-                            // Save even partial answers
                             return textarea ? textarea.value.trim() : "";
                         }
                     });
-                    // Note: We don't displayResults here, just terminate
                     terminateQuiz("El examen ha terminado automáticamente por haber cambiado de pestaña o ventana.");
                 }
             });
