@@ -44,7 +44,7 @@
             box-shadow: var(--shadow);
             margin: 20px 0;
             overflow: hidden;
-            position: relative;
+            position: relative; /* Needed for absolute positioning of overlay */
         }
 
         header {
@@ -219,13 +219,13 @@
 
         /* Termination Overlay */
         #termination-overlay {
-            position: absolute; /* Changed from fixed to absolute */
+            position: absolute; /* Relative to .quiz-container */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: white;
+            background-color: rgba(0, 0, 0, 0.85); /* Dark semi-transparent background */
+            color: white; /* Default text color for overlay */
             display: none; /* Initially hidden */
             flex-direction: column;
             justify-content: center;
@@ -233,17 +233,18 @@
             text-align: center;
             z-index: 100; /* Ensure it's on top */
             padding: 20px;
-            box-sizing: border-box; /* Include padding in dimensions */
+            box-sizing: border-box;
         }
         #termination-overlay h2 {
             font-size: 2rem;
             margin-bottom: 1rem;
-            color: var(--accent-color);
+            color: var(--accent-color); /* Yellow title */
         }
         #termination-overlay p {
             font-size: 1.2rem;
             max-width: 80%;
             margin-bottom: 1.5rem;
+            color: white; /* Ensure paragraph text is white */
         }
         #retry-section {
             margin-top: 1rem;
@@ -253,20 +254,21 @@
             max-width: 400px;
             align-items: center;
         }
+        /* **Visibility Correction:** Ensure input is visible on dark overlay */
         #retry-password-input {
             flex-grow: 1;
             padding: 0.8rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            /* **Correction:** Explicitly set background and text color */
-            background-color: white;
-            color: #333;
-            font-size: 1rem; /* Ensure text size is normal */
+            background-color: white; /* White background */
+            color: #333; /* Dark text */
+            font-size: 1rem;
         }
+        /* **Visibility Correction:** Ensure button is visible on dark overlay */
         #retry-button {
              padding: 0.8rem 1.5rem;
-             background-color: var(--accent-color);
-             color: var(--text-color); /* Use dark text */
+             background-color: var(--accent-color); /* Yellow background */
+             color: var(--text-color); /* Dark text */
              border: none;
              border-radius: 5px;
              cursor: pointer;
@@ -275,11 +277,11 @@
              font-size: 1rem;
         }
          #retry-button:hover {
-            background-color: #e0a800;
+            background-color: #e0a800; /* Darker yellow */
          }
+        /* **Visibility Correction:** Ensure error message is visible on dark overlay */
         #retry-error {
-            /* **Correction:** Use a lighter red visible on dark background */
-            color: #f8d7da;
+            color: #f8d7da; /* Light red text */
             font-size: 0.9rem;
             margin-top: 10px;
             display: none; /* Initially hidden */
