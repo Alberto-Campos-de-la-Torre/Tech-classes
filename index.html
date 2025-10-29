@@ -219,7 +219,8 @@
 
         /* Termination Overlay */
         #termination-overlay {
-            position: absolute; /* Relative to .quiz-container */
+            /* **Correction:** Use fixed position to cover viewport */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -231,7 +232,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            z-index: 100; /* Ensure it's on top */
+            z-index: 1000; /* Ensure it's on top of everything */
             padding: 20px;
             box-sizing: border-box;
         }
@@ -254,7 +255,6 @@
             max-width: 400px;
             align-items: center;
         }
-        /* **Visibility Correction:** Ensure input is visible on dark overlay */
         #retry-password-input {
             flex-grow: 1;
             padding: 0.8rem;
@@ -264,7 +264,6 @@
             color: #333; /* Dark text */
             font-size: 1rem;
         }
-        /* **Visibility Correction:** Ensure button is visible on dark overlay */
         #retry-button {
              padding: 0.8rem 1.5rem;
              background-color: var(--accent-color); /* Yellow background */
@@ -279,7 +278,6 @@
          #retry-button:hover {
             background-color: #e0a800; /* Darker yellow */
          }
-        /* **Visibility Correction:** Ensure error message is visible on dark overlay */
         #retry-error {
             color: #f8d7da; /* Light red text */
             font-size: 0.9rem;
