@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Sumativo: Campaña de Activismo Digital</title>
+    <style>
+        :root {
+            --primary-color: #005A9C;
+            --secondary-color: #f4f4f9;
+            --text-color: #333;
+            --accent-color: #FFC107;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --correct-bg: #d4edda;
+            --incorrect-bg: #f8d7da;
+            --correct-text: #155724;
+            --incorrect-text: #721c24;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 0; /* Add padding for scroll */
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        header {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin: 5px 0 0 0; font-size: 1rem; opacity: 0.9; }
+
+        #quiz-form, #results-container {
+            padding: 2rem;
+        }
+
+        .warning-banner {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid #ffeeba;
+            font-size: 0.9rem;
+        }
+
+        .question-block {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .question-block:last-of-type {
+            border-bottom: none;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.15rem; /* Slightly smaller */
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .answer-options label {
+            display: block;
+            background-color: var(--secondary-color);
+            padding: 0.9rem; /* Slightly smaller padding */
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: 1px solid #ddd;
+        }
+        .answer-options label:hover {
+            background-color: #e2e6ea;
+        }
+        .answer-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Style for open-ended question textareas */
+        .open-ended-answer textarea {
+            width: 98%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            margin-top: 10px;
+        }
+
+
+        .quiz-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1.5rem; /* Add margin top */
+        }
+        .quiz-button:hover {
+            background-color: #e0a800;
+        }
+
+        /* Results Section */
+        #results-container { display: none; }
+
+        #results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 0.95rem; /* Smaller font for table */
+        }
+        #results-table th, #results-table td {
+            border: 1px solid #ddd;
+            padding: 10px; /* Smaller padding */
+            text-align: left;
+            vertical-align: top; /* Align top for open answers */
+        }
+        #results-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        #results-table tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+         /* Style for open answer cells */
+        .open-answer-cell {
+            white-space: pre-wrap; /* Preserve line breaks */
+            font-style: italic;
+            color: #555;
+        }
+
+
+        .correct-answer-cell { /* Specific class for correct answer text */
+             font-weight: bold;
+             color: var(--correct-text);
+        }
+
+        .correct-row td:first-child::before {
+             content: '✔ ';
+             color: var(--correct-text);
+             font-weight: bold;
+        }
+        .incorrect-row td:first-child::before {
+             content: '✘ ';
+             color: var(--incorrect-text);
+             font-weight: bold;
+        }
+         .incorrect-row .user-answer-cell {
+            text-decoration: line-through;
+            opacity: 0.7;
+         }
+         /* Style for open-ended rows in results */
+        .open-ended-row td:first-child::before {
+             content: '✎ '; /* Pencil icon */
+             color: var(--primary-color);
+             font-weight: bold;
+        }
+
+
+        #reveal-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        #password-input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #reveal-button {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        #password-error {
+            color: var(--incorrect-text);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Termination Overlay */
+        #termination-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 100;
+            padding: 20px;
+        }
+        #termination-overlay h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        #termination-overlay p {
+            font-size: 1.2rem;
+            max-width: 80%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div id="termination-overlay">
+            <h2>Examen Finalizado</h2>
+            <p>La evaluación ha terminado automáticamente.</p>
+        </div>
+
+        <header>
+            <h1>Examen Sumativo</h1>
+            <p>Campaña de Activismo Digital</p>
+        </header>
+
+        <div class="warning-banner">
+            ⚠️ Atención: Si cambias de pestaña o recargas la página, el examen se finalizará automáticamente.
+        </div>
+
+        <form id="quiz-form">
+            <!-- Questions will be injected here by JavaScript -->
+            <button type="submit" class="quiz-button">Finalizar Examen</button>
+        </form>
+
+        <div id="results-container">
+            <h2>Tus Respuestas</h2>
+            <p>Aquí está el resumen de las respuestas que seleccionaste. Para ver las respuestas correctas de las preguntas de opción múltiple, introduce la contraseña.</p>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tu Respuesta</th>
+                        <!-- Correct Answer column added dynamically -->
+                    </tr>
+                </thead>
+                <tbody id="results-body">
+                    <!-- Results will be injected here -->
+                </tbody>
+            </table>
+            <div id="reveal-section">
+                <input type="password" id="password-input" placeholder="Introduce la contraseña">
+                <button type="button" id="reveal-button">Revelar Respuestas</button>
+            </div>
+             <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- COOKIE HELPER FUNCTIONS ---
+        function setCookie(name, value, minutes) {
+            let expires = "";
+            if (minutes) {
+                const date = new Date();
+                date.setTime(date.getTime() + (minutes * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax"; // Added SameSite
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function deleteCookie(name) {
+             document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- QUIZ DATA ---
+            const quizData = [
+                 // Q1 (Multiple Choice) - Removed Lesson Ref
+                { question: "En tu propia campaña, ¿cuál fue el propósito principal al definir la Misión, Visión y Valores?", options: ["Crear un documento obligatorio para el portafolio.", "Establecer la identidad central y el propósito de la campaña para guiar todas las decisiones.", "Elegir los colores y fuentes para el sitio web.", "Decidir qué páginas incluir en el mapa del sitio."], answer: 1, type: "mc" },
+                // Q2 (Multiple Choice) - Removed Lesson Ref
+                { question: "¿Cuál de las siguientes acciones representa mejor la creación de una 'Huella Digital Activa'?", options: ["Visitar un sitio web que utiliza cookies para rastrear tu navegación.", "Una aplicación recopilando datos sobre cuánto tiempo la usas.", "Publicar una foto y un comentario en una red social sobre tu campaña.", "Recibir un correo electrónico publicitario basado en tus búsquedas."], answer: 2, type: "mc" },
+                 // Q3 (Multiple Choice) - Removed Lesson Ref
+                { question: "Al diseñar el sitio web de tu campaña, ¿por qué fue importante crear un 'Wireframe' antes de empezar a construir en Wix?", options: ["Para elegir la plantilla de Wix correcta.", "Para planificar la estructura, disposición y jerarquía visual del contenido sin distracciones de diseño.", "Para escribir el texto final (copy) de la página de inicio.", "Para probar si los enlaces internos funcionaban correctamente."], answer: 1, type: "mc" },
+                 // Q4 (Multiple Choice) - Removed Lesson Ref
+                { question: "Imagina que encuentras un artículo en línea con estadísticas impactantes sobre la causa de tu campaña. Según el test C.R.A.P., ¿cuál es el primer paso MÁS importante antes de usar esa información en tu sitio?", options: ["Verificar la 'Currency' (Actualidad): ¿Es la información reciente?", "Verificar la 'Authority' (Autoridad): ¿Quién es el autor o la fuente? ¿Son expertos creíbles?", "Verificar la 'Relevance' (Relevancia): ¿Responde directamente a las preguntas de tu campaña?", "Verificar el 'Purpose' (Propósito): ¿El artículo intenta informar, persuadir o vender algo?"], answer: 1, type: "mc" },
+                 // Q5 (Multiple Choice) - Removed Lesson Ref
+                { question: "En tu página 'Involúcrate', ¿por qué es importante ofrecer diferentes maneras para que la gente apoye tu causa?", options: ["Para hacer la página más larga y completa.", "Para permitir que personas con diferentes niveles de compromiso (tiempo, dinero, habilidad) puedan participar.", "Para cumplir con los requisitos mínimos de la rúbrica.", "Para poder añadir más botones y enlaces al sitio web."], answer: 1, type: "mc" },
+                 // Q6 (Multiple Choice) - Removed Lesson Ref
+                { question: "Define 'Accesibilidad Web' en el contexto de tu campaña.", options: ["Que el sitio web se cargue rápidamente en cualquier dispositivo.", "Que el diseño del sitio web sea moderno y atractivo visualmente.", "Diseñar tu sitio web para que pueda ser utilizado por personas con diversas habilidades (visuales, auditivas, motoras, cognitivas).", "Asegurarse de que el sitio web esté disponible en varios idiomas."], answer: 2, type: "mc" },
+                 // Q7 (Multiple Choice) - Removed Lesson Ref
+                { question: "Si compartes accidentalmente una noticia falsa sobre tu causa porque creías que era verdad, ¿cómo se clasifica esa acción?", options: ["Desinformación (Disinformation)", "Clickbait", "Mala información (Misinformation)", "Libertad de expresión"], answer: 2, type: "mc" },
+                 // Q8 (Multiple Choice) - Removed Lesson Ref
+                { question: "Al escribir el contenido para tu página de inicio, ¿qué significa el concepto 'Above the fold'?", options: ["El pie de página del sitio web.", "Todo el contenido visible en la pantalla sin necesidad de hacer scroll.", "El menú de navegación principal.", "El contenido más importante de todo el sitio web."], answer: 1, type: "mc" },
+                 // Q9 (Multiple Choice) - Removed Lesson Ref
+                { question: "Se añadieron secciones como 'Blog/Noticias' y 'FAQ'. ¿Cuál es el objetivo estratégico principal de incluir estas secciones en el sitio de tu campaña?", options: ["Aumentar el número total de páginas del sitio web.", "Ofrecer más oportunidades para añadir imágenes y videos.", "Proporcionar información actualizada, responder preguntas comunes y mantener a la audiencia comprometida a largo plazo.", "Facilitar que los miembros del equipo practiquen la escritura."], answer: 2, type: "mc" },
+                 // Q10 (Multiple Choice) - Removed Lesson Ref
+                { question: "El modelo de retroalimentación 'I Like, I Wish, What If...' se utiliza para:", options: ["Criticar duramente los proyectos de otros equipos.", "Proporcionar comentarios estructurados, positivos y orientados a la mejora.", "Decidir la calificación final del proyecto.", "Simplemente decir si te gusta o no un sitio web."], answer: 1, type: "mc" },
+                // --- Open Ended Questions ---
+                // Q11 (Open Ended)
+                { question: "Describe brevemente la causa principal de tu campaña y por qué tu equipo la eligió. ¿Cuál fue su 'Historia de Origen'?", type: "open" },
+                // Q12 (Open Ended)
+                { question: "¿Cuál crees que fue el elemento MÁS FUERTE (contenido, diseño, funcionalidad) de su sitio web final y por qué?", type: "open" },
+                // Q13 (Open Ended)
+                { question: "Reflexiona sobre tu 'Compromiso de Credibilidad'. ¿Cómo se aseguró tu equipo de que la información presentada en su sitio web fuera precisa y responsable?", type: "open" },
+                // Q14 (Open Ended)
+                { question: "¿Cuál fue el mayor desafío técnico o de colaboración que enfrentó tu equipo durante la creación del sitio web y cómo lo superaron?", type: "open" },
+                // Q15 (Open Ended)
+                { question: "Más allá de este proyecto, ¿cómo aplicarás lo aprendido sobre Ciudadanía Digital y el uso responsable de la tecnología en tu vida diaria?", type: "open" }
+            ];
+
+            const quizForm = document.getElementById('quiz-form');
+            const resultsContainer = document.getElementById('results-container');
+            const resultsBody = document.getElementById('results-body');
+            const revealButton = document.getElementById('reveal-button');
+            const passwordInput = document.getElementById('password-input');
+            const passwordError = document.getElementById('password-error');
+            const terminationOverlay = document.getElementById('termination-overlay');
+            const terminationMessage = terminationOverlay.querySelector('p');
+
+            let userAnswers = []; // Will store indices for MC, strings for open-ended
+            let quizFinished = false;
+
+            // --- RELOAD & COOKIE CHECK ---
+             if (getCookie('quizCampaignFinished') === 'true') {
+                quizFinished = true;
+                terminationMessage.textContent = "Ya has completado este examen.";
+                terminationOverlay.style.display = 'flex';
+                quizForm.style.display = 'none';
+                document.querySelector('.warning-banner').style.display = 'none';
+                resultsContainer.style.display = 'none';
+                deleteCookie('quizCampaignInProgress');
+                return;
+            } else if (getCookie('quizCampaignInProgress') === 'true') {
+                 quizFinished = true;
+                terminationMessage.textContent = "El examen ha terminado porque se ha recargado la página.";
+                terminationOverlay.style.display = 'flex';
+                quizForm.style.display = 'none';
+                document.querySelector('.warning-banner').style.display = 'none';
+                resultsContainer.style.display = 'none';
+                setCookie('quizCampaignFinished', 'true', 1440);
+                deleteCookie('quizCampaignInProgress');
+                return;
+            }
+            setCookie('quizCampaignInProgress', 'true', 30); // Set 30-min in-progress cookie
+
+            // Load questions into the form
+            function loadQuiz() {
+                const quizHtml = quizData.map((q, index) => {
+                    let answerHtml = '';
+                    if (q.type === "mc") {
+                        const optionsWithIndices = q.options.map((option, i) => ({ text: option, originalIndex: i }));
+                        const shuffledOptions = optionsWithIndices.sort(() => Math.random() - 0.5);
+                        answerHtml = `<div class="answer-options">` +
+                                     shuffledOptions.map(opt => `
+                                        <label>
+                                            <input type="radio" name="question${index}" value="${opt.originalIndex}" required>
+                                            ${opt.text}
+                                        </label>
+                                    `).join('') +
+                                    `</div>`;
+                    } else { // Open-ended
+                        answerHtml = `<div class="open-ended-answer">
+                                        <textarea name="question${index}" placeholder="Escribe tu respuesta aquí..." required></textarea>
+                                     </div>`;
+                    }
+
+                    return `
+                        <div class="question-block">
+                            <p class="question-text">${index + 1}. ${q.question}</p>
+                            ${answerHtml}
+                        </div>
+                    `;
+                }).join('');
+
+                const submitButton = quizForm.querySelector('.quiz-button');
+                submitButton.insertAdjacentHTML('beforebegin', quizHtml);
+            }
+
+            function submitAndShowResults() {
+                if(quizFinished) return;
+                quizFinished = true;
+                setCookie('quizCampaignFinished', 'true', 1440); // Mark as finished
+                deleteCookie('quizCampaignInProgress'); // Remove in-progress status
+
+                userAnswers = quizData.map((q, index) => {
+                    if (q.type === "mc") {
+                        const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                        return selectedOption ? parseInt(selectedOption.value) : -1; // -1 for unanswered MC
+                    } else {
+                        const textarea = document.querySelector(`textarea[name="question${index}"]`);
+                        return textarea ? textarea.value.trim() : ""; // Get text or empty string
+                    }
+                });
+
+                displayResults();
+            }
+
+            quizForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                 // Check if all questions are answered/filled
+                let allAnswered = true;
+                for (let i = 0; i < quizData.length; i++) {
+                    if (quizData[i].type === "mc") {
+                        if (!document.querySelector(`input[name="question${i}"]:checked`)) {
+                            allAnswered = false;
+                            break;
+                        }
+                    } else {
+                        const textarea = document.querySelector(`textarea[name="question${i}"]`);
+                        if (!textarea || textarea.value.trim() === "") {
+                             allAnswered = false;
+                             break;
+                        }
+                    }
+                }
+
+                if (!allAnswered) {
+                    alert("Por favor, responde todas las preguntas antes de finalizar.");
+                    return;
+                }
+
+                submitAndShowResults();
+            });
+
+            function displayResults() {
+                let tableHtml = '';
+                userAnswers.forEach((answer, questionIndex) => {
+                    const question = quizData[questionIndex];
+                    let userAnswerText = '';
+                    let rowClass = ''; // For styling open-ended rows
+
+                    if (question.type === "mc") {
+                        userAnswerText = (answer === -1) ? "No respondida" : question.options[answer];
+                    } else {
+                        // Sanitize open-ended answers before displaying
+                        const tempDiv = document.createElement('div');
+                        tempDiv.textContent = answer || "No respondida";
+                        userAnswerText = tempDiv.innerHTML; // Use innerHTML to show encoded entities
+                        rowClass = 'open-ended-row'; // Add class for open-ended
+                    }
+
+
+                    tableHtml += `
+                        <tr data-question-index="${questionIndex}" class="${rowClass}">
+                            <td>${questionIndex + 1}</td>
+                            <td class="user-answer-cell ${question.type === 'open' ? 'open-answer-cell' : ''}">${userAnswerText}</td>
+                            <!-- Correct answer cell added later for MC -->
+                        </tr>
+                    `;
+                });
+
+                resultsBody.innerHTML = tableHtml;
+                quizForm.style.display = 'none';
+                document.querySelector('.warning-banner').style.display = 'none';
+                resultsContainer.style.display = 'block';
+            }
+
+            revealButton.addEventListener('click', function() {
+                // Use 'creatina' as the password, case-insensitive
+                if (passwordInput.value.toLowerCase() === 'creatina') {
+                    passwordError.style.display = 'none';
+
+                    let headerRow = document.querySelector('#results-table thead tr');
+                    // Add "Respuesta Correcta" header only if it doesn't exist and there are MC questions
+                    const hasMC = quizData.some(q => q.type === 'mc');
+                    if (hasMC && headerRow.cells.length < 3) {
+                        const th = document.createElement('th');
+                        th.textContent = 'Respuesta Correcta';
+                        headerRow.appendChild(th);
+                    }
+
+                    const rows = resultsBody.querySelectorAll('tr');
+                    rows.forEach(row => {
+                        const questionIndex = parseInt(row.dataset.questionIndex);
+                        const question = quizData[questionIndex];
+
+                        // Only process MC questions for revealing answers
+                        if (question.type === "mc") {
+                             // Check if the correct answer cell already exists for this row
+                            if (row.cells.length > 2) return;
+
+                            const userAnswerIndex = userAnswers[questionIndex];
+                            const correctAnswerIndex = question.answer;
+
+                            const correctAnswerCell = document.createElement('td');
+                            correctAnswerCell.textContent = question.options[correctAnswerIndex];
+                            correctAnswerCell.classList.add('correct-answer-cell');
+                            row.appendChild(correctAnswerCell);
+
+                            // Add row styling based on correctness
+                            if (userAnswerIndex === correctAnswerIndex) {
+                                row.classList.add('correct-row');
+                            } else {
+                                row.classList.add('incorrect-row');
+                            }
+                        } else if (hasMC && row.cells.length < 3) {
+                             // If it's an open-ended question but we added the 3rd header for MC, add an empty cell
+                             const emptyCell = document.createElement('td');
+                             emptyCell.textContent = '-'; // Placeholder
+                             row.appendChild(emptyCell);
+                        }
+                    });
+
+                    document.getElementById('reveal-section').style.display = 'none'; // Hide password section
+
+                } else {
+                    passwordError.style.display = 'block';
+                }
+            });
+
+            // --- TAB CHANGE / VISIBILITY DETECTION ---
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && !quizFinished) {
+                    submitAndShowResults();
+                    resultsContainer.style.display = 'none';
+                    terminationMessage.textContent = "El examen ha terminado automáticamente por haber cambiado de pestaña o ventana.";
+                    terminationOverlay.style.display = 'flex';
+                }
+            });
+
+            // --- INITIALIZE ---
+            loadQuiz();
+        });
+    </script>
+
+</body>
+</html>
+
