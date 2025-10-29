@@ -7,7 +7,6 @@
     <style>
         :root {
             --primary-color: #005A9C;
-            /* --secondary-color: #f4f4f9; /* Original light grey, replaced for white bg */
             --secondary-color: #f8f9fa; /* Very light grey for elements */
             --text-color: #333;
             --accent-color: #FFC107;
@@ -27,7 +26,6 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            /* **Correction:** Set body background to white */
             background-color: #ffffff;
             color: var(--text-color);
             display: flex;
@@ -40,7 +38,6 @@
         .quiz-container {
             width: 90%;
             max-width: 800px;
-            /* **Correction:** Use card-bg explicitly, add border for definition */
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -93,36 +90,33 @@
 
         .answer-options label {
             display: block;
-            /* **Correction:** Use the new secondary color for options */
             background-color: var(--secondary-color);
             padding: 0.9rem;
             margin-bottom: 0.5rem;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            border: 1px solid var(--border-color); /* Use border variable */
+            border: 1px solid var(--border-color);
         }
         .answer-options label:hover {
-            background-color: #e9ecef; /* Slightly darker grey on hover */
+            background-color: #e9ecef;
         }
         .answer-options input[type="radio"] {
             margin-right: 10px;
         }
 
-        /* Style for open-ended question textareas */
         .open-ended-answer textarea {
             width: 98%;
             min-height: 100px;
             padding: 10px;
-            border: 1px solid var(--border-color); /* Use border variable */
+            border: 1px solid var(--border-color);
             border-radius: 5px;
             font-family: inherit;
             font-size: 1rem;
             resize: vertical;
             margin-top: 10px;
-            background-color: #fff; /* Ensure white background */
+            background-color: #fff;
         }
-
 
         .quiz-button {
             display: block;
@@ -152,7 +146,7 @@
             font-size: 0.95rem;
         }
         #results-table th, #results-table td {
-            border: 1px solid var(--border-color); /* Use border variable */
+            border: 1px solid var(--border-color);
             padding: 10px;
             text-align: left;
             vertical-align: top;
@@ -162,16 +156,13 @@
             color: white;
         }
         #results-table tr:nth-child(even) {
-            /* **Correction:** Use the new secondary color for table rows */
             background-color: var(--secondary-color);
         }
-         /* Style for open answer cells */
         .open-answer-cell {
             white-space: pre-wrap;
             font-style: italic;
             color: #555;
         }
-
 
         .correct-answer-cell {
              font-weight: bold;
@@ -198,7 +189,6 @@
              font-weight: bold;
         }
 
-
         #reveal-section {
             display: flex;
             gap: 10px;
@@ -208,7 +198,7 @@
         #password-input {
             flex-grow: 1;
             padding: 0.8rem;
-            border: 1px solid var(--border-color); /* Use border variable */
+            border: 1px solid var(--border-color);
             border-radius: 5px;
         }
         #reveal-button {
@@ -229,20 +219,21 @@
 
         /* Termination Overlay */
         #termination-overlay {
-            position: absolute;
+            position: absolute; /* Changed from fixed to absolute */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
             color: white;
-            display: none;
+            display: none; /* Initially hidden */
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            z-index: 100;
+            z-index: 100; /* Ensure it's on top */
             padding: 20px;
+            box-sizing: border-box; /* Include padding in dimensions */
         }
         #termination-overlay h2 {
             font-size: 2rem;
@@ -265,29 +256,33 @@
         #retry-password-input {
             flex-grow: 1;
             padding: 0.8rem;
-            border: 1px solid var(--border-color); /* Use border variable */
+            border: 1px solid var(--border-color);
             border-radius: 5px;
+            /* **Correction:** Explicitly set background and text color */
             background-color: white;
             color: #333;
+            font-size: 1rem; /* Ensure text size is normal */
         }
         #retry-button {
              padding: 0.8rem 1.5rem;
              background-color: var(--accent-color);
-             color: var(--text-color);
+             color: var(--text-color); /* Use dark text */
              border: none;
              border-radius: 5px;
              cursor: pointer;
              white-space: nowrap;
              font-weight: bold;
+             font-size: 1rem;
         }
          #retry-button:hover {
             background-color: #e0a800;
          }
         #retry-error {
+            /* **Correction:** Use a lighter red visible on dark background */
             color: #f8d7da;
             font-size: 0.9rem;
             margin-top: 10px;
-            display: none;
+            display: none; /* Initially hidden */
             width: 80%;
             max-width: 400px;
         }
@@ -296,9 +291,8 @@
         .save-pdf-instructions {
             margin-top: 2rem;
             padding: 1.5rem;
-             /* **Correction:** Use the new secondary color */
             background-color: var(--secondary-color);
-            border: 1px solid var(--border-color); /* Use border variable */
+            border: 1px solid var(--border-color);
             border-radius: 8px;
         }
         .save-pdf-instructions h3 {
