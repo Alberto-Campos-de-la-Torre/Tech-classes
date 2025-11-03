@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summative Exam: Digital Activism Campaign</title>
+    <title>Examen Sumativo: Campaña de Activismo Digital</title>
     <style>
         :root {
-            /* ... (CSS variables remain the same) ... */
             --primary-color: #005A9C;
             --secondary-color: #f8f9fa; /* Very light grey for elements */
             --text-color: #333;
@@ -23,7 +22,6 @@
         }
 
         body {
-            /* ... (CSS styles remain the same) ... */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
@@ -38,7 +36,6 @@
         }
 
         .quiz-container {
-            /* ... (CSS styles remain the same) ... */
             width: 90%;
             max-width: 800px;
             background: var(--card-bg);
@@ -51,7 +48,6 @@
         }
 
         header {
-            /* ... (CSS styles remain the same) ... */
             background: var(--primary-color);
             color: #fff;
             padding: 1.5rem 2rem;
@@ -66,7 +62,6 @@
         }
 
         .warning-banner {
-            /* ... (CSS styles remain the same) ... */
             background-color: var(--warning-bg);
             color: var(--warning-text);
             padding: 1rem;
@@ -77,7 +72,6 @@
         }
 
         .question-block {
-            /* ... (CSS styles remain the same) ... */
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid #eee;
@@ -88,7 +82,6 @@
         }
 
         .question-text {
-            /* ... (CSS styles remain the same) ... */
             font-size: 1.15rem;
             font-weight: bold;
             margin-bottom: 1rem;
@@ -96,7 +89,6 @@
         }
 
         .answer-options label {
-            /* ... (CSS styles remain the same) ... */
             display: block;
             background-color: var(--secondary-color);
             padding: 0.9rem;
@@ -114,7 +106,6 @@
         }
 
         .open-ended-answer textarea {
-            /* ... (CSS styles remain the same) ... */
             width: 98%;
             min-height: 100px;
             padding: 10px;
@@ -128,7 +119,6 @@
         }
 
         .quiz-button {
-            /* ... (CSS styles remain the same) ... */
             display: block;
             width: 100%;
             padding: 1rem;
@@ -150,7 +140,6 @@
         #results-container { display: none; }
 
         #results-table {
-            /* ... (CSS styles remain the same) ... */
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 2rem;
@@ -201,7 +190,6 @@
         }
 
         #reveal-section {
-            /* ... (CSS styles remain the same) ... */
             display: flex;
             gap: 10px;
             align-items: center;
@@ -231,7 +219,6 @@
 
         /* Termination Overlay */
         #termination-overlay {
-            /* ... (CSS styles remain the same) ... */
             position: fixed;
             top: 0;
             left: 0;
@@ -260,7 +247,6 @@
             color: white;
         }
         #retry-section {
-            /* ... (CSS styles remain the same) ... */
             margin-top: 1rem;
             display: flex;
             gap: 10px;
@@ -302,7 +288,6 @@
 
         /* PDF Save Instructions */
         .save-pdf-instructions {
-            /* ... (CSS styles remain the same) ... */
             margin-top: 2rem;
             padding: 1.5rem;
             background-color: var(--secondary-color);
@@ -326,55 +311,60 @@
 
     <div class="quiz-container">
         <div id="termination-overlay">
-            <h2>Exam Finished</h2>
-            <p id="termination-message">The evaluation has automatically ended.</p>
-                        <div id="retry-section">
-                <input type="password" id="retry-password-input" placeholder="Password to retry">
-                <button type="button" id="retry-button">Retry Exam</button>
+            <h2>Examen Finalizado</h2>
+            <p id="termination-message">La evaluación ha terminado automáticamente.</p>
+            <!-- Retry Section -->
+            <div id="retry-section">
+                <input type="password" id="retry-password-input" placeholder="Contraseña para reintentar">
+                <button type="button" id="retry-button">Reintentar Examen</button>
             </div>
-            <p id="retry-error">Incorrect password.</p>
+            <p id="retry-error">Contraseña incorrecta.</p>
         </div>
 
         <header>
-            <h1>Summative Exam</h1>
-            <p>Digital Activism Campaign</p>
+            <h1>Examen Sumativo</h1>
+            <p>Campaña de Activismo Digital</p>
         </header>
 
         <div class="warning-banner">
-            ⚠️ **Attention**: If you change tabs or reload the page, the exam will automatically end. You can retry with the password if this happens.
+            ⚠️ Atención: Si cambias de pestaña o recargas la página, el examen se finalizará automáticamente. Puedes reintentar con la contraseña si esto ocurre.
         </div>
 
         <form id="quiz-form">
-                        <button type="submit" class="quiz-button">Finish Exam</button>
+            <!-- Questions will be injected here by JavaScript -->
+            <button type="submit" class="quiz-button">Finalizar Examen</button>
         </form>
 
         <div id="results-container">
-            <h2>Your Answers</h2>
-            <p>Here is a summary of the answers you selected. To see the correct answers for the multiple-choice questions, enter the password.</p>
+            <h2>Tus Respuestas</h2>
+            <p>Aquí está el resumen de las respuestas que seleccionaste. Para ver las respuestas correctas de las preguntas de opción múltiple, introduce la contraseña.</p>
             <table id="results-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Your Answer</th>
-                                            </tr>
+                        <th>Tu Respuesta</th>
+                        <!-- Correct Answer column added dynamically -->
+                    </tr>
                 </thead>
                 <tbody id="results-body">
-                                    </tbody>
+                    <!-- Results will be injected here -->
+                </tbody>
             </table>
             <div id="reveal-section">
-                <input type="password" id="password-input" placeholder="Enter the password">
-                <button type="button" id="reveal-button">Reveal Answers</button>
+                <input type="password" id="password-input" placeholder="Introduce la contraseña">
+                <button type="button" id="reveal-button">Revelar Respuestas</button>
             </div>
-            <p id="password-error">Incorrect password. Please try again.</p>
+            <p id="password-error">Contraseña incorrecta. Inténtalo de nuevo.</p>
 
-                        <div class="save-pdf-instructions">
-                <h3>Save Answers as PDF</h3>
-                <p>Once you have revealed the correct answers, you can save this page as a PDF file for your records:</p>
+            <!-- Save as PDF Instructions -->
+            <div class="save-pdf-instructions">
+                <h3>Guardar Respuestas como PDF</h3>
+                <p>Una vez que hayas revelado las respuestas correctas, puedes guardar esta página como un archivo PDF para tus registros:</p>
                 <ol>
-                    <li>Press **Ctrl + P** (on Windows/Linux) or **Cmd + P** (on Mac) to open the print dialog.</li>
-                    <li>In the "Destination" or "Printer" field, select the **"Save as PDF"** or "Microsoft Print to PDF" option.</li>
-                    <li>Adjust any other settings if necessary (like 'Layout' to 'Portrait').</li>
-                    <li>Click **"Save"** and choose where you want to save the PDF file.</li>
+                    <li>Presiona <strong>Ctrl + P</strong> (en Windows/Linux) o <strong>Cmd + P</strong> (en Mac) para abrir el diálogo de impresión.</li>
+                    <li>En el campo "Destino" o "Impresora", selecciona la opción <strong>"Guardar como PDF"</strong> o "Microsoft Print to PDF".</li>
+                    <li>Ajusta cualquier otra configuración si es necesario (como 'Diseño' a 'Vertical').</li>
+                    <li>Haz clic en <strong>"Guardar"</strong> y elige dónde quieres guardar el archivo PDF.</li>
                 </ol>
             </div>
         </div>
@@ -383,7 +373,6 @@
     <script>
         // --- COOKIE HELPER FUNCTIONS ---
         function setCookie(name, value, minutes) {
-            /* ... (JavaScript code remains the same) ... */
             let expires = "";
             if (minutes) {
                 const date = new Date();
@@ -394,7 +383,6 @@
         }
 
         function getCookie(name) {
-            /* ... (JavaScript code remains the same) ... */
             const nameEQ = name + "=";
             const ca = document.cookie.split(';');
             for(let i = 0; i < ca.length; i++) {
@@ -410,39 +398,39 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- QUIZ DATA --- (Translated Questions)
+            // --- QUIZ DATA --- (Same questions as before)
              const quizData = [
                  // Q1 (Multiple Choice)
-                { question: "In your own campaign, what was the main purpose of defining the Mission, Vision, and Values?", options: ["To create a mandatory document for the portfolio.", "To establish the campaign's core identity and purpose to guide all decisions.", "To choose the colors and fonts for the website.", "To decide which pages to include in the site map."], answer: 1, type: "mc" },
+                { question: "En tu propia campaña, ¿cuál fue el propósito principal al definir la Misión, Visión y Valores?", options: ["Crear un documento obligatorio para el portafolio.", "Establecer la identidad central y el propósito de la campaña para guiar todas las decisiones.", "Elegir los colores y fuentes para el sitio web.", "Decidir qué páginas incluir en el mapa del sitio."], answer: 1, type: "mc" },
                 // Q2 (Multiple Choice)
-                { question: "Which of the following actions best represents the creation of an 'Active Digital Footprint'?", options: ["Visiting a website that uses cookies to track your browsing.", "An application collecting data on how long you use it.", "Posting a photo and a comment on a social network about your campaign.", "Receiving an advertising email based on your searches."], answer: 2, type: "mc" },
+                { question: "¿Cuál de las siguientes acciones representa mejor la creación de una 'Huella Digital Activa'?", options: ["Visitar un sitio web que utiliza cookies para rastrear tu navegación.", "Una aplicación recopilando datos sobre cuánto tiempo la usas.", "Publicar una foto y un comentario en una red social sobre tu campaña.", "Recibir un correo electrónico publicitario basado en tus búsquedas."], answer: 2, type: "mc" },
                  // Q3 (Multiple Choice)
-                { question: "When designing your campaign website, why was it important to create a 'Wireframe' before starting to build in Wix?", options: ["To choose the correct Wix template.", "To plan the structure, layout, and visual hierarchy of the content without design distractions.", "To write the final text (copy) for the home page.", "To test if the internal links worked correctly."], answer: 1, type: "mc" },
+                { question: "Al diseñar el sitio web de tu campaña, ¿por qué fue importante crear un 'Wireframe' antes de empezar a construir en Wix?", options: ["Para elegir la plantilla de Wix correcta.", "Para planificar la estructura, disposición y jerarquía visual del contenido sin distracciones de diseño.", "Para escribir el texto final (copy) de la página de inicio.", "Para probar si los enlaces internos funcionaban correctamente."], answer: 1, type: "mc" },
                  // Q4 (Multiple Choice)
-                { question: "Imagine you find an online article with impactful statistics about your campaign's cause. According to the C.R.A.P. test, what is the MOST important first step before using that information on your site?", options: ["Check the 'Currency': Is the information recent?", "Check the 'Authority': Who is the author or source? Are they credible experts?", "Check the 'Relevance': Does it directly answer your campaign's questions?", "Check the 'Purpose': Is the article trying to inform, persuade, or sell something?"], answer: 1, type: "mc" },
+                { question: "Imagina que encuentras un artículo en línea con estadísticas impactantes sobre la causa de tu campaña. Según el test C.R.A.P., ¿cuál es el primer paso MÁS importante antes de usar esa información en tu sitio?", options: ["Verificar la 'Currency' (Actualidad): ¿Es la información reciente?", "Verificar la 'Authority' (Autoridad): ¿Quién es el autor o la fuente? ¿Son expertos creíbles?", "Verificar la 'Relevance' (Relevancia): ¿Responde directamente a las preguntas de tu campaña?", "Verificar el 'Purpose' (Propósito): ¿El artículo intenta informar, persuadir o vender algo?"], answer: 1, type: "mc" },
                  // Q5 (Multiple Choice)
-                { question: "On your 'Get Involved' page, why is it important to offer different ways for people to support your cause?", options: ["To make the page longer and more complete.", "To allow people with different levels of commitment (time, money, skill) to participate.", "To comply with the minimum requirements of the rubric.", "To be able to add more buttons and links to the website."], answer: 1, type: "mc" },
+                { question: "En tu página 'Involúcrate', ¿por qué es importante ofrecer diferentes maneras para que la gente apoye tu causa?", options: ["Para hacer la página más larga y completa.", "Para permitir que personas con diferentes niveles de compromiso (tiempo, dinero, habilidad) puedan participar.", "Para cumplir con los requisitos mínimos de la rúbrica.", "Para poder añadir más botones y enlaces al sitio web."], answer: 1, type: "mc" },
                  // Q6 (Multiple Choice)
-                { question: "Define 'Web Accessibility' in the context of your campaign.", options: ["That the website loads quickly on any device.", "That the website design is modern and visually appealing.", "Designing your website so it can be used by people with diverse abilities (visual, auditory, motor, cognitive).", "Ensuring the website is available in multiple languages."], answer: 2, type: "mc" },
+                { question: "Define 'Accesibilidad Web' en el contexto de tu campaña.", options: ["Que el sitio web se cargue rápidamente en cualquier dispositivo.", "Que el diseño del sitio web sea moderno y atractivo visualmente.", "Diseñar tu sitio web para que pueda ser utilizado por personas con diversas habilidades (visuales, auditivas, motoras, cognitivas).", "Asegurarse de que el sitio web esté disponible en varios idiomas."], answer: 2, type: "mc" },
                  // Q7 (Multiple Choice)
-                { question: "If you accidentally share a false news story about your cause because you believed it was true, how is that action classified?", options: ["Disinformation", "Clickbait", "Misinformation", "Freedom of speech"], answer: 2, type: "mc" },
+                { question: "Si compartes accidentalmente una noticia falsa sobre tu causa porque creías que era verdad, ¿cómo se clasifica esa acción?", options: ["Desinformación (Disinformation)", "Clickbait", "Mala información (Misinformation)", "Libertad de expresión"], answer: 2, type: "mc" },
                  // Q8 (Multiple Choice)
-                { question: "When writing content for your home page, what does the concept 'Above the fold' mean?", options: ["The website footer.", "All content visible on the screen without needing to scroll.", "The main navigation menu.", "The most important content on the entire website."], answer: 1, type: "mc" },
+                { question: "Al escribir el contenido para tu página de inicio, ¿qué significa el concepto 'Above the fold'?", options: ["El pie de página del sitio web.", "Todo el contenido visible en la pantalla sin necesidad de hacer scroll.", "El menú de navegación principal.", "El contenido más importante de todo el sitio web."], answer: 1, type: "mc" },
                  // Q9 (Multiple Choice)
-                { question: "Sections like 'Blog/News' and 'FAQ' were added. What is the main strategic objective of including these sections on your campaign site?", options: ["To increase the total number of pages on the website.", "To offer more opportunities to add images and videos.", "To provide updated information, answer common questions, and keep the audience engaged long-term.", "To make it easier for team members to practice writing."], answer: 2, type: "mc" },
+                { question: "Se añadieron secciones como 'Blog/Noticias' y 'FAQ'. ¿Cuál es el objetivo estratégico principal de incluir estas secciones en el sitio de tu campaña?", options: ["Aumentar el número total de páginas del sitio web.", "Ofrecer más oportunidades para añadir imágenes y videos.", "Proporcionar información actualizada, responder preguntas comunes y mantener a la audiencia comprometida a largo plazo.", "Facilitar que los miembros del equipo practiquen la escritura."], answer: 2, type: "mc" },
                  // Q10 (Multiple Choice)
-                { question: "The 'I Like, I Wish, What If...' feedback model is used to:", options: ["To harshly criticize other teams' projects.", "To provide structured, positive, and improvement-oriented feedback.", "To decide the project's final grade.", "To simply say whether you like a website or not."], answer: 1, type: "mc" },
+                { question: "El modelo de retroalimentación 'I Like, I Wish, What If...' se utiliza para:", options: ["Criticar duramente los proyectos de otros equipos.", "Proporcionar comentarios estructurados, positivos y orientados a la mejora.", "Decidir la calificación final del proyecto.", "Simplemente decir si te gusta o no un sitio web."], answer: 1, type: "mc" },
                 // --- Open Ended Questions ---
                 // Q11 (Open Ended)
-                { question: "Briefly describe your campaign's main cause and why your team chose it. What was its 'Origin Story'?", type: "open" },
+                { question: "Describe brevemente la causa principal de tu campaña y por qué tu equipo la eligió. ¿Cuál fue su 'Historia de Origen'?", type: "open" },
                 // Q12 (Open Ended)
-                { question: "What do you think was the STRONGEST element (content, design, functionality) of your final website and why?", type: "open" },
+                { question: "¿Cuál crees que fue el elemento MÁS FUERTE (contenido, diseño, funcionalidad) de su sitio web final y por qué?", type: "open" },
                 // Q13 (Open Ended)
-                { question: "Reflect on your 'Credibility Commitment'. How did your team ensure the information presented on your website was accurate and responsible?", type: "open" },
+                { question: "Reflexiona sobre tu 'Compromiso de Credibilidad'. ¿Cómo se aseguró tu equipo de que la información presentada en su sitio web fuera precisa y responsable?", type: "open" },
                 // Q14 (Open Ended)
-                { question: "What was the biggest technical or collaboration challenge your team faced during the website creation, and how did you overcome it?", type: "open" },
+                { question: "¿Cuál fue el mayor desafío técnico o de colaboración que enfrentó tu equipo durante la creación del sitio web y cómo lo superaron?", type: "open" },
                 // Q15 (Open Ended)
-                { question: "Beyond this project, how will you apply what you learned about Digital Citizenship and the responsible use of technology in your daily life?", type: "open" }
+                { question: "Más allá de este proyecto, ¿cómo aplicarás lo aprendido sobre Ciudadanía Digital y el uso responsable de la tecnología en tu vida diaria?", type: "open" }
             ];
 
             const quizForm = document.getElementById('quiz-form');
@@ -459,7 +447,7 @@
 
             let userAnswers = [];
             let quizFinished = false;
-            const correctPassword = 'proteina'; // Set the correct password (kept in Spanish for a security measure)
+            const correctPassword = 'proteina'; // Set the correct password
 
             // --- Function to trigger termination ---
             function terminateQuiz(message) {
@@ -476,17 +464,16 @@
 
             // --- RELOAD & COOKIE CHECK ---
             if (getCookie('quizCampaignFinished') === 'true') {
-                terminateQuiz("You have already completed this exam.");
+                terminateQuiz("Ya has completado este examen.");
                 return;
             } else if (getCookie('quizCampaignInProgress') === 'true') {
-                terminateQuiz("The exam has ended because the page was reloaded.");
+                terminateQuiz("El examen ha terminado porque se ha recargado la página.");
                  return;
             }
             setCookie('quizCampaignInProgress', 'true', 30);
 
             // --- Load questions into the form ---
             function loadQuiz() {
-                /* ... (JavaScript code remains the same) ... */
                 const existingQuestions = quizForm.querySelectorAll('.question-block');
                 existingQuestions.forEach(q => q.remove());
 
@@ -505,7 +492,7 @@
                                     `</div>`;
                     } else { // Open-ended
                         answerHtml = `<div class="open-ended-answer">
-                                        <textarea name="question${index}" placeholder="Write your answer here..." required></textarea>
+                                        <textarea name="question${index}" placeholder="Escribe tu respuesta aquí..." required></textarea>
                                      </div>`;
                     }
                     return `
@@ -532,7 +519,7 @@
                     }
                 }
                 if (!allAnswered) {
-                    alert("Please answer all questions before finishing.");
+                    alert("Por favor, responde todas las preguntas antes de finalizar.");
                     return false;
                 }
 
@@ -561,17 +548,16 @@
 
             // --- Display results table ---
             function displayResults() {
-                /* ... (JavaScript code remains the same) ... */
                 let tableHtml = '';
                 userAnswers.forEach((answer, questionIndex) => {
                     const question = quizData[questionIndex];
                     let userAnswerText = '';
                     let rowClass = '';
                     if (question.type === "mc") {
-                        userAnswerText = (answer === -1) ? "Not answered" : question.options[answer];
+                        userAnswerText = (answer === -1) ? "No respondida" : question.options[answer];
                     } else {
                         const tempDiv = document.createElement('div');
-                        tempDiv.textContent = answer || "Not answered";
+                        tempDiv.textContent = answer || "No respondida";
                         userAnswerText = tempDiv.innerHTML;
                         rowClass = 'open-ended-row';
                     }
@@ -585,13 +571,12 @@
 
             // --- Reveal answers logic ---
             revealButton.addEventListener('click', function() {
-                /* ... (JavaScript code remains the same) ... */
                 if (passwordInput.value.toLowerCase() === correctPassword) {
                     passwordError.style.display = 'none';
                     let headerRow = document.querySelector('#results-table thead tr');
                     const hasMC = quizData.some(q => q.type === 'mc');
                     if (hasMC && headerRow.cells.length < 3) {
-                        const th = document.createElement('th'); th.textContent = 'Correct Answer'; headerRow.appendChild(th);
+                        const th = document.createElement('th'); th.textContent = 'Respuesta Correcta'; headerRow.appendChild(th);
                     }
                     const rows = resultsBody.querySelectorAll('tr');
                     rows.forEach(row => {
@@ -641,13 +626,12 @@
                     retryPasswordInput.value = '';
 
                 } else {
-                    retryError.style.display = 'block'; // Show password error (Translated)
+                    retryError.style.display = 'block'; // Show password error
                 }
             });
 
             // --- TAB CHANGE / VISIBILITY DETECTION ---
             document.addEventListener('visibilitychange', () => {
-                /* ... (JavaScript code remains the same) ... */
                 if (document.hidden && !quizFinished && getCookie('quizCampaignInProgress') === 'true') {
                     // Try to save answers just before terminating
                     userAnswers = quizData.map((q, index) => {
@@ -659,7 +643,7 @@
                             return textarea ? textarea.value.trim() : "";
                         }
                     });
-                    terminateQuiz("The exam has automatically ended because you changed tabs or windows.");
+                    terminateQuiz("El examen ha terminado automáticamente por haber cambiado de pestaña o ventana.");
                 }
             });
 
