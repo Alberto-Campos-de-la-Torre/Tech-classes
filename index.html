@@ -453,19 +453,19 @@
                  quizForm.style.display = 'none';
                  document.querySelector('.warning-banner').style.display = 'none';
                  resultsContainer.style.display = 'none';
-                 setCookie('quizCampaignFinishedtwo', 'true', 1440);
-                 deleteCookie('quizCampaignInProgresstwo');
+                 setCookie('quizCampaignFinished_activismo', 'true', 1440);
+                 deleteCookie('quizCampaignInProgress_activismo');
             }
 
             // --- RELOAD & COOKIE CHECK ---
-            if (getCookie('quizCampaignFinishedtwo') === 'true') {
+            if (getCookie('quizCampaignFinished_activismo') === 'true') {
                  terminateQuiz("You have already completed this exam.");
                  return;
-            } else if (getCookie('quizCampaignInProgresstwo') === 'true') {
+            } else if (getCookie('quizCampaignInProgress_activismo') === 'true') {
                  terminateQuiz("The exam has ended because the page was reloaded.");
                  return;
             }
-            setCookie('quizCampaignInProgresstwo', 'true', 30);
+            setCookie('quizCampaignInProgress_activismo', 'true', 30);
 
             // --- Load questions into the form ---
             function loadQuiz() {
@@ -519,8 +519,8 @@
                  }
 
                  quizFinished = true;
-                 setCookie('quizCampaignFinishedtwo', 'true', 1440);
-                 deleteCookie('quizCampaignInProgresstwo');
+                 setCookie('quizCampaignFinished_activismo', 'true', 1440);
+                 deleteCookie('quizCampaignInProgress_activismo');
 
                  userAnswers = quizData.map((q, index) => {
                      if (q.type === "mc") {
@@ -606,8 +606,8 @@
                      // **Reset the quiz state completely**
                      quizFinished = false; // Allow submission again
                      userAnswers = []; // Clear stored answers
-                     deleteCookie('quizCampaignFinishedtwo'); // Remove the finished flag
-                     setCookie('quizCampaignInProgresstwo', 'true', 30); // Reset the in-progress timer
+                     deleteCookie('quizCampaignFinished_activismo'); // Remove the finished flag
+                     setCookie('quizCampaignInProgress_activismo', 'true', 30); // Reset the in-progress timer
 
                      // Restore UI elements
                      resultsContainer.style.display = 'none'; // Hide results section
@@ -627,7 +627,7 @@
 
             // --- TAB CHANGE / VISIBILITY DETECTION ---
             document.addEventListener('visibilitychange', () => {
-                 if (document.hidden && !quizFinished && getCookie('quizCampaignInProgress') === 'true') {
+                 if (document.hidden && !quizFinished && getCookie('quizCampaignInProgress_activismo') === 'true') {
                      // Try to save answers just before terminating
                      userAnswers = quizData.map((q, index) => {
                           if (q.type === "mc") {
