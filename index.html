@@ -454,18 +454,18 @@
                  document.querySelector('.warning-banner').style.display = 'none';
                  resultsContainer.style.display = 'none';
                  setCookie('quizCampaignFinished2', 'true', 1440);
-                 deleteCookie('quizCampaignInProgress');
+                 deleteCookie('quizCampaignInProgress2');
             }
 
             // --- RELOAD & COOKIE CHECK ---
             if (getCookie('quizCampaignFinished2') === 'true') {
                  terminateQuiz("You have already completed this exam.");
                  return;
-            } else if (getCookie('quizCampaignInProgress') === 'true') {
+            } else if (getCookie('quizCampaignInProgress2') === 'true') {
                  terminateQuiz("The exam has ended because the page was reloaded.");
                  return;
             }
-            setCookie('quizCampaignInProgress', 'true', 30);
+            setCookie('quizCampaignInProgress2', 'true', 30);
 
             // --- Load questions into the form ---
             function loadQuiz() {
@@ -519,8 +519,8 @@
                  }
 
                  quizFinished = true;
-                 setCookie('quizCampaignFinished', 'true', 1440);
-                 deleteCookie('quizCampaignInProgress');
+                 setCookie('quizCampaignFinished2', 'true', 1440);
+                 deleteCookie('quizCampaignInProgress2');
 
                  userAnswers = quizData.map((q, index) => {
                      if (q.type === "mc") {
@@ -606,8 +606,8 @@
                      // **Reset the quiz state completely**
                      quizFinished = false; // Allow submission again
                      userAnswers = []; // Clear stored answers
-                     deleteCookie('quizCampaignFinished'); // Remove the finished flag
-                     setCookie('quizCampaignInProgress', 'true', 30); // Reset the in-progress timer
+                     deleteCookie('quizCampaignFinished2'); // Remove the finished flag
+                     setCookie('quizCampaignInProgress2', 'true', 30); // Reset the in-progress timer
 
                      // Restore UI elements
                      resultsContainer.style.display = 'none'; // Hide results section
