@@ -453,19 +453,19 @@
                  quizForm.style.display = 'none';
                  document.querySelector('.warning-banner').style.display = 'none';
                  resultsContainer.style.display = 'none';
-                 setCookie('quizCampaignFinished2', 'true', 1440);
-                 deleteCookie('quizCampaignInProgress2');
+                 setCookie('quizCampaignFinishedtwo', 'true', 1440);
+                 deleteCookie('quizCampaignInProgresstwo');
             }
 
             // --- RELOAD & COOKIE CHECK ---
-            if (getCookie('quizCampaignFinished2') === 'true') {
+            if (getCookie('quizCampaignFinishedtwo') === 'true') {
                  terminateQuiz("You have already completed this exam.");
                  return;
-            } else if (getCookie('quizCampaignInProgress2') === 'true') {
+            } else if (getCookie('quizCampaignInProgresstwo') === 'true') {
                  terminateQuiz("The exam has ended because the page was reloaded.");
                  return;
             }
-            setCookie('quizCampaignInProgress2', 'true', 30);
+            setCookie('quizCampaignInProgresstwo', 'true', 30);
 
             // --- Load questions into the form ---
             function loadQuiz() {
@@ -519,8 +519,8 @@
                  }
 
                  quizFinished = true;
-                 setCookie('quizCampaignFinished2', 'true', 1440);
-                 deleteCookie('quizCampaignInProgress2');
+                 setCookie('quizCampaignFinishedtwo', 'true', 1440);
+                 deleteCookie('quizCampaignInProgresstwo');
 
                  userAnswers = quizData.map((q, index) => {
                      if (q.type === "mc") {
@@ -606,8 +606,8 @@
                      // **Reset the quiz state completely**
                      quizFinished = false; // Allow submission again
                      userAnswers = []; // Clear stored answers
-                     deleteCookie('quizCampaignFinished2'); // Remove the finished flag
-                     setCookie('quizCampaignInProgress2', 'true', 30); // Reset the in-progress timer
+                     deleteCookie('quizCampaignFinishedtwo'); // Remove the finished flag
+                     setCookie('quizCampaignInProgresstwo', 'true', 30); // Reset the in-progress timer
 
                      // Restore UI elements
                      resultsContainer.style.display = 'none'; // Hide results section
